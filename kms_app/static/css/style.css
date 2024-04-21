@@ -1,0 +1,21 @@
+*{
+    font-family: "Poppins", sans-serif;
+}
+
+h1{
+    color: #102C57;
+    font-size: 96px;
+    font-weight: 800;
+    font-style: normal;
+}
+
+.bg_color{
+    background-color: #FEFAF6;
+    z-index: -1;
+}
+
+.navbar{
+    background-color: #D1BB9E;
+    font-weight: 700;
+    font-style: normal;
+}
