@@ -3,7 +3,8 @@
 <section>
     <div class="py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-8 z-10 relative">
         <h1 class="mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl lg:text-6xl">COFFEEPEDIA</h1>
-        <form class="py-6 max-w-4xl mx-auto border-gray-700 ">
+        <form method="POST" class="py-6 max-w-4xl mx-auto border-gray-700 ">
+            {% csrf_token %}
             <label for="default-search"
                 class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
             <div class="relative">
@@ -27,7 +28,7 @@
             <div class="flex items-center">
                 <h5 class="pl-8 font-bold tracking-tight text-gray-900 dark:text-white mr-2" style="color: #76453B;">
                     Answer :</h5>
-                <p class="text-gray-700 dark:text-gray-400">Answer Here...</p>
+                <p class="text-gray-700 dark:text-gray-400">{{ answer }}</p>
             </div>
         </div>
 
@@ -38,8 +39,7 @@
             <a href="#">
                 <h5 class="mb-2 pl-8 text-left text-2xl font-bold tracking-tight text-gray-900 dark:text-white" style="color: #76453B;">Title Here ..</h5>
             </a>
-            <p class="mb-3 pl-8 font-normal text-gray-700 dark:text-gray-400 text-left ">Here are the biggest enterprise technology
-                acquisitions of 2021 so far, in reverse chronological order.</p>
+            <p class="mb-3 pl-8 font-normal text-gray-700 dark:text-gray-400 text-left ">{{ context }}</p>
             <a href="#"
                 class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                 Read more

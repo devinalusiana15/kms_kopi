@@ -1,0 +1,80 @@
+{
+  "classes": [
+    "TIME",
+    "PERSON",
+    "CATEGORY",
+    "LOCATION",
+    "NATIONALITY",
+    "PRODUCT",
+    "COUNTRY",
+    "CITY",
+    "DATE",
+    "TECHNIQUE",
+    "CONTINENT",
+    "VERB"
+  ],
+  "annotations": [
+    [
+      "Coffee was first grown in an area informally called the Coffee Belt. The birthplace of coffee is Africa, Ethiopia specifically. Robusta, discovered much later in the 19th century by botanists in Central and West Africa. \r",
+      {
+        "entities": [
+          [0, 6, "PRODUCT"],
+          [17, 22, "VERB"],
+          [56, 68, "LOCATION"],
+          [87, 93, "PRODUCT"],
+          [97, 103, "CONTINENT"],
+          [105, 113, "COUNTRY"],
+          [128, 135, "PRODUCT"],
+          [137, 147, "VERB"],
+          [166, 178, "DATE"],
+          [182, 191, "PERSON"],
+          [195, 219, "CONTINENT"]
+        ]
+      }
+    ],
+    ["\r", { "entities": [] }],
+    [
+      "The Ethiopians cultivated coffee for hundreds of years. Yemeni traders began exporting coffee to Persia, Egypt, and the Ottoman Empire. Arabian physician first wrote about coffee sometime in the 10th century.\r",
+      {
+        "entities": [
+          [4, 14, "NATIONALITY"],
+          [15, 25, "VERB"],
+          [26, 32, "PRODUCT"],
+          [56, 62, "NATIONALITY"],
+          [77, 86, "VERB"],
+          [87, 93, "PRODUCT"],
+          [97, 103, "COUNTRY"],
+          [105, 110, "COUNTRY"],
+          [116, 135, "COUNTRY"],
+          [136, 153, "PERSON"],
+          [160, 165, "VERB"],
+          [172, 178, "PRODUCT"],
+          [195, 207, "DATE"]
+        ]
+      }
+    ],
+    ["\r", { "entities": [] }],
+    [
+      "South America had an almost perfect climate for growing coffee. The vast land made it a prime spot for cultivating a relatively new crop. This happened back in the 1700s. Cuba has been growing coffee since the mid-18th century. Coffee dates back to the 6th century in Yemen. An amazing technological advancement in brewing developed in Italy in the early 1900s.",
+      {
+        "entities": [
+          [0, 13, "CONTINENT"],
+          [48, 55, "VERB"],
+          [56, 63, "PRODUCT"],
+          [103, 114, "VERB"],
+          [164, 170, "DATE"],
+          [171, 175, "COUNTRY"],
+          [185, 192, "VERB"],
+          [193, 199, "PRODUCT"],
+          [210, 227, "DATE"],
+          [253, 264, "DATE"],
+          [268, 274, "COUNTRY"],
+          [315, 322, "TECHNIQUE"],
+          [323, 332, "VERB"],
+          [336, 341, "COUNTRY"],
+          [349, 360, "DATE"]
+        ]
+      }
+    ]
+  ]
+}

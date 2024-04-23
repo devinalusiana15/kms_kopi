@@ -19,7 +19,7 @@ from django.urls import path
 from kms_app import views
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("", views.index, name='index'),
+    path("", views.home, name='home'), 
+    path('search/', views.home, name='search'),
     path('upload/', views.upload_file, name='upload_file'),
 ]
