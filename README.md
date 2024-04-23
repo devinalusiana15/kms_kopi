@@ -1,7 +1,7 @@
 # Aplikasi Web KMS Kopi
 
 **Untuk developer yang akan menggunakan kode:**
-1. Lakukan clone kode GitHub dengan git clone
+1. Lakukan clone kode GitHub dengan **git clone https://github.com/devinalusiana15/kms_kopi.git**
 2. Git init
 3. Cek posisi branch, git branch
 4. Kode utama berada di branch master. Masuk ke dalam branch master, git checkout master
