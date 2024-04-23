@@ -20,6 +20,7 @@ from kms_app import views
 
 urlpatterns = [
     path("", views.home, name='home'), 
+    path('articles/', views.articles, name='articles'), 
     path('search/', views.home, name='search'),
     path('upload/', views.upload_file, name='upload_file'),
 ]
