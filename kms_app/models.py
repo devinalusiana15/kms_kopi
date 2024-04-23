@@ -124,7 +124,6 @@ pdf_path = "kms_app/uploaded_files/coffee.pdf"
 if os.path.exists(pdf_path):
     try:
         doc = fitz.open(pdf_path)
-        doc.close()
 
         # Mengambil teks dari halaman PDF
         text = ""
@@ -140,7 +139,7 @@ if os.path.exists(pdf_path):
         for sentence in sentences:
             doc = merge_entities(nlp_custom(sentence))
             document.append(doc.text)
-
+        
         def pos_tagging_and_extract_verbs(text):
             # Tokenisasi teks menjadi kata-kata
             tokens = word_tokenize(text)
@@ -155,44 +154,15 @@ if os.path.exists(pdf_path):
             verbs = [word for word, pos in pos_tags if pos.startswith('VB') and word.lower() not in stop_words]
 
             return verbs
-
+        
         def pos_tagging_and_extract_nouns(text):
-            # Tokenisasi teks menjadi kata-kata
+            not_include = "coffee"
             tokens = word_tokenize(text)
-
-            # POS Tagging
             pos_tags = pos_tag(tokens)
-
-            # Ekstraksi kata-kata yang mengandung noun
-            nouns = [word for word, pos in pos_tags if pos.startswith('NN')]
-
+            nouns = [word for word, pos in pos_tags if pos.startswith('NN') and word != not_include]
             return nouns
-
-
-        def lemmatization(text):
-            # Memproses teks menggunakan model bahasa Inggris dari Spacy
-            doc = nlp_default(text)
-
-            important_words = {"where", "when", "who", "what", "why", "how"}
-
-            # Lemmatisasi tanpa menghapus stop words
-            filtered_tokens = [token.lemma_ for token in doc if token.text.lower() in important_words or token.lemma_ != '-PRON-']
-
-            # Menggabungkan kembali kata-kata yang tersisa menjadi teks baru
-            return ' '.join(filtered_tokens)
-
-        def create_inverted_index(documents):
-            inverted_index = {}
-            for doc_id, document in enumerate(documents):
-                tokens = document.lower().split()
-                for token in tokens:
-                    if token not in inverted_index:
-                        inverted_index[token] = []
-                    if doc_id not in inverted_index[token]:
-                        inverted_index[token].append(doc_id)
-            return inverted_index
-
     except Exception as e:
         pass
 else:
     pass
+
