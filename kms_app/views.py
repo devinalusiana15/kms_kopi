@@ -5,8 +5,20 @@ from django.shortcuts import render
 from .forms import UploadFileForm
 from django.contrib import messages
 
-def index(request):
-    return render(request, 'Home.html')
+
+def home(request):
+    if request.method == 'POST':
+        search_query = request.POST.get('default-search')
+        answer = "Success"
+        return render(request, 'Home.html', {'answer': answer})
+    else:
+        return render(request, 'Home.html')
+    
+def articles(request):
+    context_path = "kms_app/uploaded_files/coffee.pdf" 
+    context = extract_text_from_pdf(context_path)
+    
+    return render(request, 'pages/articles.html', {'context': context})
 
 def upload_file(request):
     if request.method == 'POST':
@@ -43,18 +55,6 @@ def handle_uploaded_file(file):
         for chunk in file.chunks():
             destination.write(chunk)
 
-from .models import create_inverted_index, merge_entities, nlp_custom, pos_tagging_and_extract_nouns, pos_tagging_and_extract_verbs, document, lemmatization
-
-def home(request):
-    context_path = "kms_app/knowledge/coffee.pdf" 
-    context = extract_text_from_pdf(context_path)
-
-    if request.method == 'POST':
-        search_query = request.POST.get('default-search')
-        answer = "Success"
-        return render(request, 'Home.html', {'answer': answer, 'context': context})
-    else:
-        return render(request, 'Home.html', {'context': context})
 
 def extract_text_from_pdf(context_path):
     text = ""
