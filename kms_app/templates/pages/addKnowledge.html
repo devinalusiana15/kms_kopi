@@ -1,0 +1,41 @@
+{% extends 'layouts/main.html' %} 
+{% block container %}
+<div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-8 z-10 relative">
+    <h1 class="py-6 text-4xl font-extrabold tracking-tight leading-none text-center">Add Knowledge</h1>
+    <form class="max-w-2xl mx-auto border-gray-700" method="post" enctype="multipart/form-data" id="uploadForm">
+        {% csrf_token %}
+        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="user_avatar">Upload file</label>
+        <input name="file" class="block w-full text-sm text-gray-900 border border-gray-800 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="user_avatar_help" id="user_avatar" type="file">
+        
+        <div class="max-w-2xl mx-auto flex justify-end">
+            <button type="submit" class="my-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" id="submitButton">Submit</button>
+        </div>
+    </form>
+</div>
+<div class="bg_color w-full h-full absolute top-0 left-0 z-0"></div>
+
+{% for message in messages %}
+    {% if message.tags == 'success' %}
+        <script>
+            var m = "{{message}}";
+            Swal.fire({
+                title: "Success!",
+                text: m,
+                icon: "success"
+            });
+        </script>
+    {% else %}
+        <script>
+            var m = "{{message}}";
+            Swal.fire({
+                title: "Error!",
+                text: m,
+                icon: "error"
+            });
+        </script>
+    {% endif %}
+{% endfor %}
+
+{% endblock container %}
+
+
