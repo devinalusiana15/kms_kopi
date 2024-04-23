@@ -12,6 +12,8 @@ from spacy.tokens import Doc, Span
 from tqdm import tqdm
 
 import json
+import subprocess
+import os.path
 
 from django.db import models
 
@@ -48,6 +50,19 @@ for text, annot in tqdm(filtered_annotations):
 
 # Simpan data pelatihan ke disk dalam format Spacy
 db.to_disk("kms_app/training/training_data.spacy")
+
+# Cek apakah model sudah ada sebelumnya
+model_trained = os.path.exists("kms_app/training/model-best")
+
+# Jika model belum ada, maka jalankan proses training
+if not model_trained:
+    # Eksekusi perintah pertama setelah penyimpanan data ke disk
+    init_config_args = "init config kms_app/training/config.cfg --lang en --pipeline ner --optimize efficiency"
+    subprocess.run(["python", "-m", "spacy"] + init_config_args.split())
+
+    # Eksekusi perintah kedua setelah penyimpanan data ke disk
+    train_args = "train kms_app/training/config.cfg --output kms_app/training/ --paths.train kms_app/training/training_data.spacy --paths.dev kms_app/training/training_data.spacy"
+    subprocess.run(["python", "-m", "spacy"] + train_args.split())
 
 ##### MENGGABUNGKAN NER DEFAULT & CUSTOM #####
 def merge_entities(doc):
@@ -104,72 +119,80 @@ nlp_custom = spacy.load("kms_app/training/model-best")
 if "sentencizer" not in nlp_custom.pipe_names:
     nlp_custom.add_pipe("sentencizer")
 
-# Memasukkan path PDF
-pdf_path = "kms_app/knowledge/coffee.pdf"
-doc = fitz.open(pdf_path)
+pdf_path = "kms_app/uploaded_files/coffee.pdf"
 
-# Mengambil teks dari halaman PDF
-text = ""
-for page_number in range(doc.page_count):
-    page = doc[page_number]
-    text += page.get_text()
+if os.path.exists(pdf_path):
+    try:
+        doc = fitz.open(pdf_path)
+        doc.close()
 
-text = text.replace('\n', ' ')
+        # Mengambil teks dari halaman PDF
+        text = ""
+        for page_number in range(doc.page_count):
+            page = doc[page_number]
+            text += page.get_text()
 
-sentences = text.split('.')
+        text = text.replace('\n', ' ')
 
-document = []
-for sentence in sentences:
-    doc = merge_entities(nlp_custom(sentence))
-    document.append(doc.text)
+        sentences = text.split('.')
 
-def pos_tagging_and_extract_verbs(text):
-    # Tokenisasi teks menjadi kata-kata
-    tokens = word_tokenize(text)
+        document = []
+        for sentence in sentences:
+            doc = merge_entities(nlp_custom(sentence))
+            document.append(doc.text)
 
-    # Mengambil stop words dari NLTK
-    stop_words = set(stopwords.words('english'))
+        def pos_tagging_and_extract_verbs(text):
+            # Tokenisasi teks menjadi kata-kata
+            tokens = word_tokenize(text)
 
-    # POS Tagging
-    pos_tags = pos_tag(tokens)
+            # Mengambil stop words dari NLTK
+            stop_words = set(stopwords.words('english'))
 
-    # Ekstraksi kata-kata yang mengandung noun dan bukan stop words
-    verbs = [word for word, pos in pos_tags if pos.startswith('VB') and word.lower() not in stop_words]
+            # POS Tagging
+            pos_tags = pos_tag(tokens)
 
-    return verbs
+            # Ekstraksi kata-kata yang mengandung noun dan bukan stop words
+            verbs = [word for word, pos in pos_tags if pos.startswith('VB') and word.lower() not in stop_words]
 
-def pos_tagging_and_extract_nouns(text):
-    # Tokenisasi teks menjadi kata-kata
-    tokens = word_tokenize(text)
+            return verbs
 
-    # POS Tagging
-    pos_tags = pos_tag(tokens)
+        def pos_tagging_and_extract_nouns(text):
+            # Tokenisasi teks menjadi kata-kata
+            tokens = word_tokenize(text)
 
-    # Ekstraksi kata-kata yang mengandung noun
-    nouns = [word for word, pos in pos_tags if pos.startswith('NN')]
+            # POS Tagging
+            pos_tags = pos_tag(tokens)
 
-    return nouns
+            # Ekstraksi kata-kata yang mengandung noun
+            nouns = [word for word, pos in pos_tags if pos.startswith('NN')]
+
+            return nouns
 
 
-def lemmatization(text):
-    # Memproses teks menggunakan model bahasa Inggris dari Spacy
-    doc = nlp_default(text)
+        def lemmatization(text):
+            # Memproses teks menggunakan model bahasa Inggris dari Spacy
+            doc = nlp_default(text)
 
-    important_words = {"where", "when", "who", "what", "why", "how"}
+            important_words = {"where", "when", "who", "what", "why", "how"}
 
-    # Lemmatisasi tanpa menghapus stop words
-    filtered_tokens = [token.lemma_ for token in doc if token.text.lower() in important_words or token.lemma_ != '-PRON-']
+            # Lemmatisasi tanpa menghapus stop words
+            filtered_tokens = [token.lemma_ for token in doc if token.text.lower() in important_words or token.lemma_ != '-PRON-']
 
-    # Menggabungkan kembali kata-kata yang tersisa menjadi teks baru
-    return ' '.join(filtered_tokens)
+            # Menggabungkan kembali kata-kata yang tersisa menjadi teks baru
+            return ' '.join(filtered_tokens)
 
-def create_inverted_index(documents):
-    inverted_index = {}
-    for doc_id, document in enumerate(documents):
-        tokens = document.lower().split()
-        for token in tokens:
-            if token not in inverted_index:
-                inverted_index[token] = []
-            if doc_id not in inverted_index[token]:
-                inverted_index[token].append(doc_id)
-    return inverted_index
+        def create_inverted_index(documents):
+            inverted_index = {}
+            for doc_id, document in enumerate(documents):
+                tokens = document.lower().split()
+                for token in tokens:
+                    if token not in inverted_index:
+                        inverted_index[token] = []
+                    if doc_id not in inverted_index[token]:
+                        inverted_index[token].append(doc_id)
+            return inverted_index
+
+    except Exception as e:
+        pass
+else:
+    pass
