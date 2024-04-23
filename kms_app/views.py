@@ -5,11 +5,48 @@ from django.shortcuts import render
 from .forms import UploadFileForm
 from django.contrib import messages
 
+def find_answer_type(question):
+    question = question.lower().split()
+    format = ['what', 'when', 'where', 'who', 'why', 'how']
+    entities = []
+    if question[0] in format:
+      if 'where' in question:
+          return ['LOC', 'GPE']
+      elif 'who' in question:
+          return ['NORP', 'PERSON']
+      elif 'when' in question:
+          return ['DATE', 'TIME']
+      elif 'what' in question:
+          return ['PRODUCT', 'VARIETY', 'METHODS', 'BEVERAGE', 'QUANTITY']
+    else:
+        return "Pertanyaan tidak valid"
+
+def find_answer(relevant_sentences, answer_types, entities):
+    answer_types_mapping = {
+        'LOC': ['LOC','GPE'],
+        'PERSON': ['NORP', 'PERSON'],
+        'DATE': ['DATE', 'TIME'],
+        'PRODUCT': ['PRODUCT', 'VARIETY', 'METHODS', 'BEVERAGE', 'QUANTITY']
+    }
+    for ent_text, ent_label in entities:
+        for answer_type, labels in answer_types_mapping.items():
+            if answer_type in answer_types and ent_label in labels:
+                return ent_text
+    return "Tidak ada informasi yang ditemukan."
 
 def home(request):
     if request.method == 'POST':
         search_query = request.POST.get('default-search')
-        answer = "Success"
+        print("Nilai default-search:", search_query) # Buat pembuktian dulu
+        answer_type = find_answer_type(search_query)
+        if answer_type == "Pertanyaan tidak valid":
+            answer = "Pertanyaan tidak valid. Silahkan masukkan pertanyaan lagi."
+        else:
+            # relevant_sentences = []
+            # entities = [] 
+            # answer = find_answer(relevant_sentences, answer_type, entities)
+            # print(answer)
+            answer = "Success"
         return render(request, 'Home.html', {'answer': answer})
     else:
         return render(request, 'Home.html')
@@ -55,7 +92,6 @@ def handle_uploaded_file(file):
         for chunk in file.chunks():
             destination.write(chunk)
 
-
 def extract_text_from_pdf(context_path):
     text = ""
     try:
@@ -65,31 +101,3 @@ def extract_text_from_pdf(context_path):
     except Exception as e:
         print("Error:", e)
     return text
-
-def find_answer_type(question):
-    question = question.lower()
-    entities = []
-    if 'where' in question:
-        return ['LOC', 'GPE']
-    elif 'who' in question:
-        return ['NORP', 'PERSON']
-    elif 'when' in question:
-        return ['DATE', 'TIME']
-    elif 'what' in question:
-        return ['PRODUCT', 'VARIETY', 'METHODS', 'BEVERAGE', 'QUANTITY']
-    else:
-        return "Pertanyaan tidak valid"
-    
-def find_answer(relevant_sentences, answer_types, entities):
-  # Kamus yang memetakan tipe jawaban ke label entitas yang sesuai
-    answer_types_mapping = {
-        'LOC': ['LOC','GPE'],
-        'PERSON': ['NORP', 'PERSON'],
-        'DATE': ['DATE', 'TIME'],
-        'PRODUCT': ['PRODUCT', 'VARIETY', 'METHODS', 'BEVERAGE', 'QUANTITY']
-    }
-    for ent_text, ent_label in entities:
-        for answer_type, labels in answer_types_mapping.items():
-            if answer_type in answer_types and ent_label in labels:
-                return ent_text
-    return "Tidak ada informasi yang ditemukan."
