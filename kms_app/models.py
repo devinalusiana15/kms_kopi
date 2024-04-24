@@ -5,10 +5,16 @@ from nltk.tag import pos_tag
 from nltk.chunk import tree2conlltags
 from nltk.corpus import stopwords
 
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('maxent_ne_chunker')
+nltk.download('words')
+nltk.download('stopwords')
+
 import spacy
 import fitz
 from spacy.tokens import DocBin
-from spacy.tokens import Doc, Span
+from spacy.tokens import Doc
 from tqdm import tqdm
 
 import json
@@ -24,8 +30,8 @@ nlp_default = spacy.load("en_core_web_sm")
 db = DocBin()
 
 # Buka file JSON yang berisi data pelatihan
-f = open('kms_app/training/train_data.json')
-TRAIN_DATA = json.load(f)
+with open('kms_app/training/train_data.json', 'r', encoding='utf-8') as f:
+    TRAIN_DATA = json.load(f)
 
 # Filter anotasi untuk menghapus entri null
 filtered_annotations = [annotation for annotation in TRAIN_DATA['annotations'] if annotation is not None]
@@ -139,30 +145,7 @@ if os.path.exists(pdf_path):
         for sentence in sentences:
             doc = merge_entities(nlp_custom(sentence))
             document.append(doc.text)
-        
-        def pos_tagging_and_extract_verbs(text):
-            # Tokenisasi teks menjadi kata-kata
-            tokens = word_tokenize(text)
-
-            # Mengambil stop words dari NLTK
-            stop_words = set(stopwords.words('english'))
-
-            # POS Tagging
-            pos_tags = pos_tag(tokens)
-
-            # Ekstraksi kata-kata yang mengandung noun dan bukan stop words
-            verbs = [word for word, pos in pos_tags if pos.startswith('VB') and word.lower() not in stop_words]
-
-            return verbs
-        
-        def pos_tagging_and_extract_nouns(text):
-            not_include = "coffee"
-            tokens = word_tokenize(text)
-            pos_tags = pos_tag(tokens)
-            nouns = [word for word, pos in pos_tags if pos.startswith('NN') and word != not_include]
-            return nouns
     except Exception as e:
         pass
 else:
     pass
-
