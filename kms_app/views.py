@@ -115,7 +115,7 @@ def retrieve_documents(documents, keywords=None, nouns=None):
 
     return result
 
-def get_answer_new(question):
+def get_answer(question):
     # Menghapus stop words
     keywords = pos_tagging_and_extract_verbs(question)
     keyword_noun = pos_tagging_and_extract_nouns(question)
