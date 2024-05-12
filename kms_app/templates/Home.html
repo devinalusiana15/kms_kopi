@@ -3,7 +3,7 @@
 <section>
     <div class="py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-8 z-10 relative">
         <h1 class="mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl lg:text-6xl">COFFEEPEDIA</h1>
-        <form method="POST" class="py-6 max-w-4xl mx-auto border-gray-700 ">
+        <form id="form-question-answer" method="POST" class="py-6 max-w-4xl mx-auto border-gray-700 ">
             {% csrf_token %}
             <label for="default-search"
                 class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
@@ -15,7 +15,7 @@
                             d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                     </svg>
                 </div>
-                <input type="search" id="default-search" name="question"
+                <input type="search" id="default-search" name="question" value="{{ question }}"
                     class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-700 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Ask about coffee" required />
                 <button type="submit"
@@ -54,6 +54,5 @@
 
     <div class="bg_color w-full h-full absolute top-0 left-0 z-0"></div>
 </section>
-
 
 {% endblock container %}
