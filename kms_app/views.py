@@ -1,16 +1,13 @@
 import os
-from django.conf import settings
 import fitz
+from django.conf import settings
 from django.shortcuts import render
-from .forms import UploadFileForm
 from django.contrib import messages
-import nltk
+from .forms import UploadFileForm
+from .models import nlp_custom, nlp_default, document, merge_entities
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.tag import pos_tag
-from .models import nlp_custom, nlp_default, document, merge_entities
-
-from django.http import HttpResponse
 
 def pos_tagging_and_extract_verbs(text):
     tokens = word_tokenize(text)
@@ -38,16 +35,17 @@ def find_answer_type(question):
       elif 'when' in question:
           return ['DATE', 'TIME']
       elif 'what' in question:
-          return ['PRODUCT', 'VARIETY', 'METHODS', 'BEVERAGE', 'QUANTITY']
+          return ['VARIETY', 'METHODS', 'BEVERAGE', 'QUANTITY', 'LOC', 'LAW', 'NEEDS', 'JOB', 'PRODUCT', 'DISTANCE', 'TEMPERATURE']
     else:
         return "Pertanyaan tidak valid"
 
 def find_answer(answer_types, entities):
     answer_types_mapping = {
         'LOC': ['LOC','GPE', 'CONTINENT'],
-        'PERSON': ['NORP', 'PERSON','NATIONALITY'],
+        'PERSON': ['NORP', 'PERSON','NATIONALITY', 'JOB'],
         'DATE': ['DATE', 'TIME'],
-        'PRODUCT': ['PRODUCT', 'VARIETY', 'METHODS', 'BEVERAGE', 'QUANTITY']
+        'PRODUCT': ['PRODUCT', 'VARIETY', 'METHODS', 'BEVERAGE', 'QUANTITY' , 'NEEDS', 'DISTANCE', 'TEMPERATURE'],
+        'LAW': ['LAW']
     }
     for ent_text, ent_label in entities:
         for answer_type, labels in answer_types_mapping.items():
@@ -176,10 +174,11 @@ def get_answer(question):
 
 def home(request):
     if request.method == 'POST':
-        search_query = request.POST.get('question')
-        print({"Pertanyaan: ", search_query})
-        answer_context = get_answer(search_query)
-        return render(request, 'Home.html', {'answer': answer_context})
+        question = request.POST.get('question') or ''
+        print({"Pertanyaan: ", question})
+        answer_context = get_answer(question)
+        post = {'answer': answer_context, 'question': question}
+        return render(request, 'Home.html', post)
     else:
         return render(request, 'Home.html')
     
@@ -213,13 +212,11 @@ def upload_file(request):
     return render(request, 'pages/addKnowledge.html', {'form': form})
 
 def handle_uploaded_file(file):
-    # Get direktori
     upload_dir = os.path.join(settings.BASE_DIR, 'kms_app/uploaded_files')
-    # Membuat direktori jika belum ada
     if not os.path.exists(upload_dir):
         os.makedirs(upload_dir)
-    # Menyimpan file
-    with open(os.path.join(upload_dir, file.name), 'wb+') as destination:
+    filename = "coffee.pdf"
+    with open(os.path.join(upload_dir, filename), 'wb+') as destination:
         for chunk in file.chunks():
             destination.write(chunk)
 
