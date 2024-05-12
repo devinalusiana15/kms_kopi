@@ -178,7 +178,7 @@ def home(request):
     if request.method == 'POST':
         search_query = request.POST.get('question')
         print({"Pertanyaan: ", search_query})
-        answer_context = get_answer_new(search_query)
+        answer_context = get_answer(search_query)
         return render(request, 'Home.html', {'answer': answer_context})
     else:
         return render(request, 'Home.html')
