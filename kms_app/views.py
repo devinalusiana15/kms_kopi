@@ -35,7 +35,7 @@ def find_answer_type(question):
       elif 'when' in question:
           return ['DATE', 'TIME']
       elif 'what' in question:
-          return ['VARIETY', 'METHODS', 'BEVERAGE', 'QUANTITY', 'LOC', 'LAW', 'NEEDS', 'JOB', 'PRODUCT', 'DISTANCE', 'TEMPERATURE']
+          return ['PRODUCT', 'VARIETY', 'METHODS', 'BEVERAGE', 'QUANTITY', 'LOC', 'LAW', 'NEEDS', 'JOB', 'DISTANCE', 'TEMPERATURE']
     else:
         return "Pertanyaan tidak valid"
 
