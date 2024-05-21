@@ -1,13 +1,64 @@
 import os
 import fitz
+from datetime import datetime
 from django.conf import settings
-from django.shortcuts import render
 from django.contrib import messages
-from .forms import UploadFileForm
-from .models import nlp_custom, nlp_default, document, merge_entities
+from django.shortcuts import render, redirect
+from .forms import LoginForm, UploadFileForm
+from .models import nlp_custom, nlp_default, document, merge_entities, User
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.tag import pos_tag
+
+def login(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            try:
+                user = User.objects.get(username=username)
+                if user.password == password:
+                    request.session['user_id'] = user.user_id
+                    return redirect('uploadKnowledge')
+                else:
+                    form.add_error(None, 'Invalid username or password')
+            except User.DoesNotExist:
+                form.add_error(None, 'Invalid username or password')
+    else:
+        form = LoginForm()
+    return render(request, 'pages/uploaders/login.html', {'form': form})
+
+def logout(request):
+    del request.session['user_id']
+    return redirect('login')
+
+def addKnowledge(request):
+    return render(request, 'pages/seekers/addKnowledge.html')
+
+def uploadKnowledge(request):
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            uploaded_file = request.FILES['file']
+            # Validasi tipe file harus PDF
+            if uploaded_file.content_type != 'application/pdf':
+                messages.error(request, 'File must be in PDF format.')
+            else:
+                # Cek apakah file sudah ada
+                upload_dir = os.path.join(settings.BASE_DIR, 'kms_app/uploaded_files')
+                if os.path.exists(os.path.join(upload_dir, uploaded_file.name)):
+                    messages.error(request, 'File already exists.')
+                else:
+                    # Simpan file
+                    handle_uploaded_file(uploaded_file)
+                    messages.success(request, 'New knowledge is added successfully')
+                    return redirect('uploadKnowledge')
+        else:
+            messages.error(request, 'Failed to add new knowledge')
+    else:
+        form = UploadFileForm()
+    return render(request, 'pages/uploaders/uploadersAddKnowledge.html', {'form': form})
 
 def pos_tagging_and_extract_verbs(text):
     tokens = word_tokenize(text)
@@ -17,11 +68,15 @@ def pos_tagging_and_extract_verbs(text):
     return verbs
 
 def pos_tagging_and_extract_nouns(text):
-    not_include = "coffee"
     tokens = word_tokenize(text)
     pos_tags = pos_tag(tokens)
-    nouns = [word for word, pos in pos_tags if pos.startswith('NN') and word != not_include]
-    return nouns
+    nouns = [word for word, pos in pos_tags if pos.startswith('NN')]
+
+    if len(nouns) == 1 and nouns[0] == "coffee":
+        return nouns
+    else:
+        nouns = [noun for noun in nouns if noun != "coffee"]
+        return nouns
 
 def find_answer_type(question):
     question = question.lower().split()
@@ -35,7 +90,7 @@ def find_answer_type(question):
       elif 'when' in question:
           return ['DATE', 'TIME']
       elif 'what' in question:
-          return ['PRODUCT', 'VARIETY', 'METHODS', 'BEVERAGE', 'QUANTITY', 'LOC', 'LAW', 'NEEDS', 'JOB', 'DISTANCE', 'TEMPERATURE']
+          return ['PRODUCT', 'VARIETY', 'METHODS', 'BEVERAGE', 'QUANTITY', 'LOC', 'JOB', 'DISTANCE', 'TEMPERATURE']
     else:
         return "Pertanyaan tidak valid"
 
@@ -44,8 +99,7 @@ def find_answer(answer_types, entities):
         'LOC': ['LOC','GPE', 'CONTINENT'],
         'PERSON': ['NORP', 'PERSON','NATIONALITY', 'JOB'],
         'DATE': ['DATE', 'TIME'],
-        'PRODUCT': ['PRODUCT', 'VARIETY', 'METHODS', 'BEVERAGE', 'QUANTITY' , 'NEEDS', 'DISTANCE', 'TEMPERATURE'],
-        'LAW': ['LAW']
+        'PRODUCT': ['PRODUCT', 'VARIETY', 'METHODS', 'BEVERAGE', 'QUANTITY', 'DISTANCE', 'TEMPERATURE'],
     }
     for ent_text, ent_label in entities:
         for answer_type, labels in answer_types_mapping.items():
@@ -187,35 +241,24 @@ def articles(request):
     context = extract_text_from_pdf(context_path)
     return render(request, 'pages/articles.html', {'context': context})
 
-def upload_file(request):
-    if request.method == 'POST':
-        form = UploadFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            uploaded_file = request.FILES['file']
-            # Validasi tipe file harus PDF
-            if uploaded_file.content_type != 'application/pdf':
-                messages.error(request, 'File must be in PDF format.')
-            else:
-                # Cek apakah file sudah ada
-                upload_dir = os.path.join(settings.BASE_DIR, 'kms_app/uploaded_files')
-                if os.path.exists(os.path.join(upload_dir, uploaded_file.name)):
-                    messages.error(request, 'File already exists.')
-                else:
-                    # Simpan file
-                    handle_uploaded_file(uploaded_file)
-                    messages.success(request, 'New knowledge is added successfully')
-                    return render(request, 'pages/addKnowledge.html')
-        else:
-            messages.error(request, 'Failed to add new knowledge')
-    else:
-        form = UploadFileForm()
-    return render(request, 'pages/addKnowledge.html', {'form': form})
+# def handle_uploaded_file(file):
+#     upload_dir = os.path.join(settings.BASE_DIR, 'kms_app/uploaded_files')
+#     if not os.path.exists(upload_dir):
+#         os.makedirs(upload_dir)
+#     filename = "coffee.pdf"
+#     with open(os.path.join(upload_dir, filename), 'wb+') as destination:
+#         for chunk in file.chunks():
+#             destination.write(chunk)
 
 def handle_uploaded_file(file):
     upload_dir = os.path.join(settings.BASE_DIR, 'kms_app/uploaded_files')
     if not os.path.exists(upload_dir):
         os.makedirs(upload_dir)
-    filename = "coffee.pdf"
+        
+    current_date = datetime.now().strftime("%d%m%y")
+    _, file_extension = os.path.splitext(file.name)
+    filename = f"{current_date}_coffee{file_extension}"
+
     with open(os.path.join(upload_dir, filename), 'wb+') as destination:
         for chunk in file.chunks():
             destination.write(chunk)
