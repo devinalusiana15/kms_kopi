@@ -4,6 +4,8 @@ import fitz
 import json
 import subprocess
 import os.path
+from django.db import models
+from django.core.validators import MinLengthValidator
 from tqdm import tqdm
 from spacy.tokens import DocBin, Doc
 
@@ -12,6 +14,14 @@ nltk.download('averaged_perceptron_tagger')
 nltk.download('maxent_ne_chunker')
 nltk.download('words')
 nltk.download('stopwords')
+
+class User(models.Model):
+    user_id = models.AutoField(primary_key=True)
+    username = models.CharField(max_length=150, unique=True)
+    password = models.CharField(max_length=128, validators=[MinLengthValidator(8)])
+
+    def __str__(self):
+        return self.username
 
 # Load model bahasa Inggris dari Spacy
 nlp_default = spacy.load("en_core_web_sm")
@@ -67,34 +77,37 @@ if "sentencizer" not in nlp_custom.pipe_names:
     nlp_custom.add_pipe("sentencizer")
 
 # Path ke file PDF
-pdf_path = "kms_app/uploaded_files/coffee.pdf"
+directory_path = "kms_app/uploaded_files/"
 
-document = ""
+for filename in os.listdir(directory_path):
+    if filename.endswith(".pdf"):  # Pastikan itu file PDF
+        pdf_path = os.path.join(directory_path, filename)
+        if os.path.exists(pdf_path):
+            # Jika file PDF sudah ada
+            try:
+                # Buka file PDF
+                doc = fitz.open(pdf_path)
+        
+                # Ambil teks dari halaman PDF
+                for page_number in range(doc.page_count):
+                    page = doc[page_number]
+                    text = page.get_text()
+                    text = text.replace('\n', ' ')
+            
+                    document = []
+            
+                    # Bagi teks menjadi kalimat
+                    sentences = text.split('.')
 
-# Periksa apakah file PDF ada
-if os.path.exists(pdf_path):
-    try:
-        # Buka file PDF
-        doc = fitz.open(pdf_path)
-
-        # Ambil teks dari halaman PDF
-        for page_number in range(doc.page_count):
-            page = doc[page_number]
-            text = page.get_text()
-            text = text.replace('\n', ' ')
-
-            # Bagi teks menjadi kalimat
-            sentences = text.split('.')
-
-            # Proses setiap kalimat
-            for sentence in sentences:
-                # Gabungkan entitas NER
-                doc = merge_entities(nlp_custom(sentence))
-                document.append(doc.text)
-    except Exception as e:
+                    # Proses setiap kalimat
+                    for sentence in sentences:
+                        # Gabungkan entitas NER
+                        doc = merge_entities(nlp_custom(sentence))
+                        document.append(doc.text)
+            except Exception as e:
+                pass
+    else: 
         pass
-else:
-    document = "No document"
 
 # Path ke file JSON yang berisi data train
 train_data_path = 'kms_app/training/train_data.json'
