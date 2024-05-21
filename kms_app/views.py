@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from .forms import LoginForm, UploadFileForm
-from .models import nlp_custom, nlp_default, document, merge_entities, User
+from .models import nlp_custom, nlp_default, document, merge_entities, uploader
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.tag import pos_tag
@@ -17,13 +17,13 @@ def login(request):
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
             try:
-                user = User.objects.get(username=username)
+                user = uploader.objects.get(username=username)
                 if user.password == password:
                     request.session['user_id'] = user.user_id
                     return redirect('uploadKnowledge')
                 else:
                     form.add_error(None, 'Invalid username or password')
-            except User.DoesNotExist:
+            except uploader.DoesNotExist:
                 form.add_error(None, 'Invalid username or password')
     else:
         form = LoginForm()
@@ -34,7 +34,7 @@ def logout(request):
     return redirect('login')
 
 def addKnowledge(request):
-    return render(request, 'pages/seekers/addKnowledge.html')
+    return render(request, 'pages/uploaders/addKnowledge.html')
 
 def uploadKnowledge(request):
     if request.method == 'POST':
