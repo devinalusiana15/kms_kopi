@@ -15,8 +15,8 @@ nltk.download('maxent_ne_chunker')
 nltk.download('words')
 nltk.download('stopwords')
 
-class User(models.Model):
-    user_id = models.AutoField(primary_key=True)
+class uploader(models.Model):
+    uploader_id = models.AutoField(primary_key=True)
     username = models.CharField(max_length=150, unique=True)
     password = models.CharField(max_length=128, validators=[MinLengthValidator(8)])
 
