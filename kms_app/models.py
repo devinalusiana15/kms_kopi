@@ -78,14 +78,14 @@ class PostingListLemmas(models.Model):
 nlp_default = spacy.load("en_core_web_sm")
 
 # Model NER Custom
-model_path = "kms_kopi/training/model-best"
+model_path = "kms_app/training/model-best"
 if os.path.exists(model_path):
     nlp_custom = spacy.load(model_path)
 else:
     # Jika model khusus tidak ditemukan, buat model kosong
     nlp_custom = spacy.blank("en")  
 
-    train_data_path = 'kms_kopi/training/train_data.json'
+    train_data_path = 'kms_app/training/train_data.json'
 
     # Cek apakah file JSON ada
     if os.path.exists(train_data_path):
@@ -120,11 +120,11 @@ else:
             db.add(doc)
 
         # Simpan data pelatihan ke disk dalam format Spacy
-        db.to_disk("kms_kopi/training/training_data.spacy")
+        db.to_disk("kms_app/training/training_data.spacy")
 
         # Eksekusi perintah setelah penyimpanan data ke disk
-        init_config_args = "init config kms_kopi/training/config.cfg --lang en --pipeline ner --optimize efficiency"
-        train_args = "train kms_kopi/training/config.cfg --output kms_kopi/training/ --paths.train kms_kopi/training/training_data.spacy --paths.dev kms_kopi/training/training_data.spacy"
+        init_config_args = "init config kms_app/training/config.cfg --lang en --pipeline ner --optimize efficiency"
+        train_args = "train kms_app/training/config.cfg --output kms_app/training/ --paths.train kms_app/training/training_data.spacy --paths.dev kms_app/training/training_data.spacy"
 
         # Jalankan perintah untuk inisialisasi konfigurasi
         subprocess.run(["python", "-m", "spacy"] + init_config_args.split())
