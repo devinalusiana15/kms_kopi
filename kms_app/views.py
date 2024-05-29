@@ -12,12 +12,14 @@ from django.contrib import messages
 from django.db import transaction
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.utils.safestring import mark_safe
 
 from .forms import LoginForm, UploadFileForm
 from .models import (
     nlp_default,
     merge_entities,
+    get_fuseki_data,
     Uploader,
     Documents,
     Terms,
@@ -71,6 +73,14 @@ def uploadKnowledge(request):
                     
                     handle_uploaded_file(uploaded_file)                    
                     create_and_save_inverted_index(new_document)
+
+                    doc_ontology = extract_text_from_pdf(new_document.document_path)
+                    doc_ontology = merge_entities(nlp_default(doc_ontology)).ents
+                    
+                    print(doc_ontology)
+                    ontology = generate_ontology(doc_ontology)
+                    save_ontology(ontology, new_document.document_name.replace('.pdf', '.owl'))
+
                     
                     messages.success(request, 'New knowledge is added successfully')
                     return render(request, 'pages/uploaders/uploadersAddKnowledge.html')
@@ -88,6 +98,7 @@ def pos_tagging_and_extract_verbs(text):
     return verbs
 
 def pos_tagging_and_extract_nouns(text):
+    not_include = ["coffee", "definition"]
     tokens = word_tokenize(text)
     pos_tags = pos_tag(tokens)
     nouns = [word for word, pos in pos_tags if pos.startswith('NN')]
@@ -95,22 +106,29 @@ def pos_tagging_and_extract_nouns(text):
     if len(nouns) == 1 and nouns[0] == "coffee":
         return nouns
     else:
-        nouns = [noun for noun in nouns if noun != "coffee"]
+        nouns = [noun for noun in nouns if noun not in not_include]
         return nouns
 
 def find_answer_type(question):
+
     question = question.lower().split()
+
     format = ['what', 'when', 'where', 'who', 'why', 'how']
-    entities = []
+
     if question[0] in format:
       if 'where' in question:
-          return ['LOC', 'GPE', 'CONTINENT']
+          return ['LOC', 'GPE', 'CONTINENT', 'LOCATION']
       elif 'who' in question:
           return ['NORP', 'PERSON','NATIONALITY']
       elif 'when' in question:
           return ['DATE', 'TIME']
       elif 'what' in question:
-          return ['PRODUCT', 'VARIETY', 'METHODS', 'BEVERAGE', 'QUANTITY', 'LOC', 'JOB', 'DISTANCE', 'TEMPERATURE']
+          if 'definition' in question:
+            return ['definition']
+          else:
+            return ['PERCENT', 'PRODUCT', 'VARIETY', 'METHODS', 'BEVERAGE', 'QUANTITY']
+      elif 'how' in question:
+          return ['direction']
     else:
         return "Pertanyaan tidak valid"
 
@@ -195,7 +213,7 @@ def retrieve_documents_lemmas(keywords=None, nouns=None):
 
     return relevant_documents, relevant_sentences
 
-def get_answer(question):
+def get_answer_new(question):
     keywords_verbs = pos_tagging_and_extract_verbs(question)
     keywords_nouns = pos_tagging_and_extract_nouns(question)
     response_text = f"Pertanyaan asli: {question}<br>Keywords (Verbs): {keywords_verbs}<br>Keywords (Nouns): {keywords_nouns}<br>"
@@ -242,14 +260,16 @@ def get_answer(question):
                 response_text += f"<br>Jawaban tidak ditemukan dalam dokumen: {result['document_name']}"
                 refine = Refinements(question=question, answer=answer)
                 refine.save()
+                answer = "Tidak ada informasi yang ditemukan."
     else:
         response_text += "<br>Dokumen yang relevan tidak ditemukan."
         refine = Refinements(question=question, answer=answer)
         refine.save()
 
-    context = {'response_text': response_text, 'related_articles': search_result_verbs}
+    context = {'response_text': response_text, 'related_articles': relevant_sentences_verbs}
     print(context)
-    return answer, search_result_verbs
+    extra_info = get_extra_information(answer)
+    return answer, search_result_verbs, extra_info
 
 
 def home(request):
@@ -257,14 +277,27 @@ def home(request):
         # search_query = request.POST.get('question')
         question = request.POST.get('question') or ''
         print({"Pertanyaan: ", question})
-        answer_context, related_articles = get_answer(question)
-        # post = {'question': question}
-
-        context = {
-            'question': question,
-            'answer': answer_context,
-            'related_articles': related_articles
-        }
+        answer_types = find_answer_type(question)
+        annotation_types = ['definition', 'direction']
+        if not any(answer_type in annotation_types for answer_type in answer_types):
+            answer_context, related_articles, extra_info = get_answer_new(question)
+            print('MASUK ATAS')
+            context = {
+                'question': question,
+                'answer': answer_context,
+                'related_articles': related_articles,
+                'extra_info': extra_info
+            }
+        else:
+            answer = get_annotation(question, answer_types)
+            print('MASUK BAWAH')
+            context = {
+                'question': question,
+                'answer': mark_safe(answer),
+                'related_articles': None,
+                'extra_info': None
+            }
+        print(f'ini context related article: {context}')
         return render(request, 'Home.html', context)
     else:
         return render(request, 'Home.html', {'related_articles': []})
@@ -324,8 +357,10 @@ def create_and_save_inverted_index(document):
         for posting in postings:
             PostingListLemmas.objects.create(termlemma_id=posting[0], docdetail_id=posting[1])
 
+
 def articles(request):
     documents = Documents.objects.all()
+    print(documents)
     
     context = []
 
@@ -334,13 +369,162 @@ def articles(request):
 
         truncated_text = extracted_text[:1000]
 
-        # Create dictionary to store document and content details
         article_data = {
             'doc_name': os.path.splitext(document.document_name)[0],
-            'context': truncated_text+'...',
-            'full_path': document.document_path, 
+            'context': truncated_text + '...',
+            'full_path': document.document_path,
+            'id': document.document_id
         }
 
         context.append(article_data)
 
     return render(request, 'pages/articles.html', {'articles': context})
+
+def detailArticle(request, document_id):
+    
+    document = get_object_or_404(Documents, document_id=document_id)
+    extracted_text = extract_text_from_pdf(document.document_path)
+
+    article_data = {
+        'doc_name': os.path.splitext(document.document_name)[0],
+        'full_text': extracted_text
+    }
+
+    return render(request, 'pages/detailArticle.html', {'article': article_data})
+
+""" Ontologi """
+
+def generate_ontology(doc_ontology):
+    # Proses pembuatan ontologi
+    ontology = """@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix owl: <http://www.w3.org/2002/07/owl#> .
+    @prefix coffee: <http://www.semanticweb.org/ariana/coffee#> .
+
+    # Ontology Header
+    <http://www.semanticweb.org/ariana/coffee#>
+        rdf:type owl:Ontology ;
+        owl:versionIRI <http://www.semanticweb.org/ariana/coffee#1.0> .
+
+    # Classes
+    """
+
+    classes = set()
+    object_properties = set()
+
+    for sent in doc_ontology:
+        prev_entity = None
+        for ent in sent.ents:
+            if ent.label_ != '':
+                if ent.label_ == 'VERB':
+                    if prev_entity:
+                        # Menambahkan range dan domain dengan melihat entitas sebelum dan sesudah entitas VERB
+                        object_properties.add(ent.text)
+                        ontology += f"""
+                        <http://www.semanticweb.org/ariana/coffee#{ent.text.replace(" ", "_")}> rdfs:domain <http://www.semanticweb.org/ariana/coffee#{prev_entity["type"]}> .
+                        """
+                        # Next entity
+                        next_entity = None
+                        for next_ent in sent.ents:
+                            if next_ent.start > ent.end:
+                                next_entity = next_ent
+                                break
+                        if next_entity:
+                            ontology += f"""
+                            <http://www.semanticweb.org/ariana/coffee#{ent.text.replace(" ", "_")}> rdfs:range <http://www.semanticweb.org/ariana/coffee#{next_entity.label_}> .
+                            """
+                            # Individual - Object Property - Individual
+                            ontology += f"""
+                            <http://www.semanticweb.org/ariana/coffee#{prev_entity["text"].replace(" ", "_")}> coffee:{ent.text.replace(" ", "_")} <http://www.semanticweb.org/ariana/coffee#{next_entity.text.replace(" ", "_")}> .
+                            """
+                    prev_entity = None  # Reset prev_entity
+                else:
+                    prev_entity = {"text": ent.text, "type": ent.label_}
+                    # Add classes for entities if not already present
+                    classes.add(ent.label_)
+
+    for sent in doc_ontology:
+        for ent in sent.ents:
+            if ent.label_ != '':
+                individual_name = ent.text.replace(" ", "_")
+                if ent.label_ != 'VERB':
+                    classes.add(ent.label_)
+                    ontology += f"""
+                    <http://www.semanticweb.org/ariana/coffee#{individual_name}> rdf:type <http://www.semanticweb.org/ariana/coffee#{ent.label_}> .
+                    """
+    return ontology
+
+def save_ontology(ontology, file_name):
+    owl_directory = os.path.join(settings.BASE_DIR, 'kms_app/owl_file')
+    file_path = os.path.join(owl_directory, file_name)
+    with open(file_path, "w") as output_file:
+        output_file.write(ontology)
+
+def get_extra_information(answer):
+    response = ""
+
+    query = f"""
+    PREFIX coffee: <http://www.semanticweb.org/ariana/coffee#>
+    SELECT ?p ?o ?s WHERE {{
+      {{ coffee:{answer} ?p ?o.
+        FILTER (!CONTAINS(LCASE(STR(?p)), "type"))
+      }}
+      UNION
+      {{ ?s ?p coffee:{answer}.
+        FILTER (!CONTAINS(LCASE(STR(?p)), "type"))
+      }}
+    }}
+    """
+
+    try:
+        results = get_fuseki_data(query)
+    except Exception as e:
+        print(f"Error executing query: {e}")
+        return "Error executing query"
+
+    if results:
+        for row in results:
+            predicate_name = row.get('p', '').split('#')[-1].replace("_", " ") if row.get('p') else None
+            object_name = row.get('o', '').split('#')[-1].replace("_", " ") if row.get('o') else None
+            subject_name = row.get('s', '').split('#')[-1].replace("_", " ") if row.get('s') else None
+
+            if object_name:
+                response += f"{answer} {predicate_name} {object_name}. "
+            if subject_name:
+                response += f"{subject_name} {predicate_name} {answer}. "
+
+        return response
+    else:
+        return None
+
+
+def get_annotation(question,annotation):
+
+    keywords_nouns = pos_tagging_and_extract_nouns(question)
+
+    noun = "_".join(keywords_nouns)
+    print(noun)
+
+    response = ""
+
+    query = f"""
+    PREFIX coffee: <http://www.semanticweb.org/ariana/coffee#>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    SELECT ?s WHERE {{
+      coffee:{noun} rdfs:{annotation[0]} ?s
+    }}
+    """
+
+    try:
+        results = get_fuseki_data(query)
+    except Exception as e:
+        print(f"Error executing query: {e}")
+        return "Error executing query"
+
+    if results:
+        for row in results:
+          response = row['s'].replace("\n", "<br>")
+    else:
+        response = "Tidak ada jawaban"
+
+    return response

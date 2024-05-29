@@ -1,0 +1,19 @@
+{% extends 'layouts/main.html' %}
+{% block container %}
+<section>
+    <div class="bg_color"></div>
+    <div class="px-4 mx-auto max-w-screen-xl text-center z-10 relative">
+        <h1 class="py-4 mb-4 text-4xl font-extrabold tracking-tight leading-none text-4xl">{{ article.doc_name }}</h1>
+
+        <!-- Isi Article -->
+        <div class="py-4 max-w-4xl mx-auto bg-white border border-gray-900 rounded-lg shadow dark:bg-gray-800 dark:border-gray-900">
+            <p class="py-8 px-16 font-normal text-gray-700 dark:text-gray-400 text-justify">{{ article.full_text }}</p>
+
+            <button onclick="history.back()" class="inline-flex items-center px-8 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                Back
+            </button>
+        </div>
+        <div><br></div>
+    </div>
+</section>
+{% endblock container %}

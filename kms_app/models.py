@@ -7,6 +7,9 @@ from django.db import models
 from django.core.validators import MinLengthValidator
 from tqdm import tqdm
 from spacy.tokens import DocBin, Doc
+from django.db import models
+from rdflib import Graph, Namespace, Literal, URIRef
+import requests
 
 nltk.download('punkt')
 nltk.download('averaged_perceptron_tagger')
@@ -174,3 +177,21 @@ def merge_entities(doc):
     merged_doc.ents = spans
 
     return merged_doc
+
+def get_fuseki_data(query_string):
+    endpoint = "http://localhost:3030/Kopi/query"
+
+    # send SPARQL query
+    r = requests.get(endpoint, params={'query': query_string})
+    
+    # get query results
+    results = []
+    if r.status_code == 200:
+        response = r.json()
+        for result in response['results']['bindings']:
+            formatted_result = {}
+            for key in result.keys():
+                formatted_result[key] = result[key]['value']
+            results.append(formatted_result)
+
+    return results

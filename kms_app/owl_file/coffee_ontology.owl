@@ -1,0 +1,82 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix owl: <http://www.w3.org/2002/07/owl#> .
+    @prefix coffee: <http://www.semanticweb.org/ariana/coffee#> .
+
+    # Ontology Header
+    <http://www.semanticweb.org/ariana/coffee#>
+        rdf:type owl:Ontology ;
+        owl:versionIRI <http://www.semanticweb.org/ariana/coffee#1.0> .
+
+    # Classes
+    
+                    <http://www.semanticweb.org/ariana/coffee#Coffee> rdf:type <http://www.semanticweb.org/ariana/coffee#PRODUCT> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Coffee_Belt_.> rdf:type <http://www.semanticweb.org/ariana/coffee#LOCATION> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Coffee_originated_from> rdf:type <http://www.semanticweb.org/ariana/coffee#LOCATION> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Ethiopia> rdf:type <http://www.semanticweb.org/ariana/coffee#COUNTRY> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Robusta> rdf:type <http://www.semanticweb.org/ariana/coffee#PRODUCT> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Botanists> rdf:type <http://www.semanticweb.org/ariana/coffee#PERSON> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Robusta> rdf:type <http://www.semanticweb.org/ariana/coffee#PRODUCT> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#19th_century> rdf:type <http://www.semanticweb.org/ariana/coffee#DATE> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Robusta> rdf:type <http://www.semanticweb.org/ariana/coffee#PRODUCT> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Central_Africa_.> rdf:type <http://www.semanticweb.org/ariana/coffee#CONTINENT> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Robusta> rdf:type <http://www.semanticweb.org/ariana/coffee#PRODUCT> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#West_Africa> rdf:type <http://www.semanticweb.org/ariana/coffee#GPE> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Coffee_.> rdf:type <http://www.semanticweb.org/ariana/coffee#PRODUCT> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Coffee_exported> rdf:type <http://www.semanticweb.org/ariana/coffee#LOCATION> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Ottoman_Empire_.> rdf:type <http://www.semanticweb.org/ariana/coffee#CONTINENT> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Coffee_exported> rdf:type <http://www.semanticweb.org/ariana/coffee#LOCATION> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Egypt> rdf:type <http://www.semanticweb.org/ariana/coffee#COUNTRY> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Arabian_physician> rdf:type <http://www.semanticweb.org/ariana/coffee#PERSON> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Coffee_.> rdf:type <http://www.semanticweb.org/ariana/coffee#PRODUCT> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Coffee> rdf:type <http://www.semanticweb.org/ariana/coffee#PRODUCT> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#10th_century> rdf:type <http://www.semanticweb.org/ariana/coffee#DATE> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Cuba> rdf:type <http://www.semanticweb.org/ariana/coffee#COUNTRY> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Coffee_.> rdf:type <http://www.semanticweb.org/ariana/coffee#PRODUCT> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Coffee_existed_in> rdf:type <http://www.semanticweb.org/ariana/coffee#LOCATION> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#6th_century> rdf:type <http://www.semanticweb.org/ariana/coffee#DATE> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Coffee_originated> rdf:type <http://www.semanticweb.org/ariana/coffee#LOCATION> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Yemen_.> rdf:type <http://www.semanticweb.org/ariana/coffee#COUNTRY> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Italy> rdf:type <http://www.semanticweb.org/ariana/coffee#COUNTRY> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#early_1900s> rdf:type <http://www.semanticweb.org/ariana/coffee#DATE> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Coffee_.> rdf:type <http://www.semanticweb.org/ariana/coffee#PRODUCT> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#washes_cherries> rdf:type <http://www.semanticweb.org/ariana/coffee#DATE> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#body_.> rdf:type <http://www.semanticweb.org/ariana/coffee#COUNTRY> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Central_and_South_America> rdf:type <http://www.semanticweb.org/ariana/coffee#CONTINENT> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#process_.> rdf:type <http://www.semanticweb.org/ariana/coffee#PRODUCT> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#washed_.> rdf:type <http://www.semanticweb.org/ariana/coffee#DATE> .
+                    
