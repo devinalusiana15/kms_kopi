@@ -98,6 +98,13 @@ def pos_tagging_and_extract_verbs(text):
     return verbs
 
 def pos_tagging_and_extract_nouns(text):
+    not_include = "coffee"
+    tokens = word_tokenize(text)
+    pos_tags = pos_tag(tokens)
+    nouns = [word for word, pos in pos_tags if pos.startswith('NN') and word != not_include]
+    return nouns
+
+def pos_tagging_and_extract_nouns_ontology(text):
     not_include = ["coffee", "definition"]
     tokens = word_tokenize(text)
     pos_tags = pos_tag(tokens)
@@ -275,24 +282,24 @@ def get_answer_new(question):
 def home(request):
     if request.method == 'POST':
         # search_query = request.POST.get('question')
-        question = request.POST.get('question') or ''
-        print({"Pertanyaan: ", question})
-        answer_types = find_answer_type(question)
+        search_query = request.POST.get('question')
+        print({"Pertanyaan: ", search_query})
+        answer_types = find_answer_type(search_query)
         annotation_types = ['definition', 'direction']
         if not any(answer_type in annotation_types for answer_type in answer_types):
-            answer_context, related_articles, extra_info = get_answer_new(question)
+            answer_context, related_articles, extra_info = get_answer_new(search_query)
             print('MASUK ATAS')
             context = {
-                'question': question,
+                'question': search_query,
                 'answer': answer_context,
                 'related_articles': related_articles,
                 'extra_info': extra_info
             }
         else:
-            answer = get_annotation(question, answer_types)
+            answer = get_annotation(search_query, answer_types)
             print('MASUK BAWAH')
             context = {
-                'question': question,
+                'question': search_query,
                 'answer': mark_safe(answer),
                 'related_articles': None,
                 'extra_info': None
@@ -500,7 +507,7 @@ def get_extra_information(answer):
 
 def get_annotation(question,annotation):
 
-    keywords_nouns = pos_tagging_and_extract_nouns(question)
+    keywords_nouns = pos_tagging_and_extract_nouns_ontology(question)
 
     noun = "_".join(keywords_nouns)
     print(noun)
