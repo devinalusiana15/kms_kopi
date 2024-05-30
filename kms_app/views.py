@@ -7,6 +7,9 @@ from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.tag import pos_tag
 
+import time
+from django.utils.safestring import mark_safe
+
 from django.conf import settings
 from django.contrib import messages
 from django.db import transaction
@@ -283,7 +286,7 @@ def get_answer_new(question):
 
 def home(request):
     if request.method == 'POST':
-        # search_query = request.POST.get('question')
+        start_time = time.time()  
         search_query = request.POST.get('question')
         print({"Pertanyaan: ", search_query})
         answer_types = find_answer_type(search_query)
@@ -306,6 +309,12 @@ def home(request):
                 'related_articles': None,
                 'extra_info': None
             }
+        end_time = time.time() 
+        response_time = (end_time - start_time) * 1000
+        response_time = round(response_time, 1)
+        
+        context['response_time'] = response_time
+        
         print(f'ini context related article: {context}')
         return render(request, 'Home.html', context)
     else:
