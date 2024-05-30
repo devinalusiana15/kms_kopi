@@ -329,26 +329,6 @@ def extract_text_from_pdf(context_path):
         print("Error:", e)
     return text
 
-def extract_text_from_pdf_onto(context_path):
-    text = ""
-    try:
-        with fitz.open(context_path) as doc:
-            for page in doc:
-                text += page.get_text()
-    except Exception as e:
-        print("Error:", e)
-
-    text = text.replace('\n', ' ')
-
-    sentences = text.split('.')
-
-    document = []
-    for sentence in sentences:
-        doc = merge_entities(nlp_custom(sentence))
-        document.append(doc)
-
-    return document
-
 @transaction.atomic
 def create_and_save_inverted_index(document):
     text = extract_text_from_pdf(document.document_path)
