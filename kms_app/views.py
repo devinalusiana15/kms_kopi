@@ -18,6 +18,7 @@ from django.utils.safestring import mark_safe
 from .forms import LoginForm, UploadFileForm
 from .models import (
     nlp_default,
+    nlp_custom,
     merge_entities,
     get_fuseki_data,
     Uploader,
@@ -74,11 +75,12 @@ def uploadKnowledge(request):
                     handle_uploaded_file(uploaded_file)                    
                     create_and_save_inverted_index(new_document)
 
-                    doc_ontology = extract_text_from_pdf(new_document.document_path)
-                    doc_ontology = merge_entities(nlp_default(doc_ontology)).ents
+                    extract_text = extract_text_from_pdf(new_document.document_path)
+                    text = extract_text.replace('\n', ' ')
+                    document = [merge_entities(nlp_custom(sentence)) for sentence in text.split('.') if sentence.strip()]
                     
-                    print(doc_ontology)
-                    ontology = generate_ontology(doc_ontology)
+                    print(document)
+                    ontology = generate_ontology(document)
                     save_ontology(ontology, new_document.document_name.replace('.pdf', '.owl'))
 
                     
