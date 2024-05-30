@@ -2,13 +2,13 @@
   "lang":"en",
   "name":"pipeline",
   "version":"0.0.0",
-  "spacy_version":">=3.7.4,<3.8.0",
+  "spacy_version":">=3.7.2,<3.8.0",
   "description":"",
   "author":"",
   "email":"",
   "url":"",
   "license":"",
-  "spacy_git_version":"bff8725f4",
+  "spacy_git_version":"a89eae928",
   "vectors":{
     "width":0,
     "vectors":0,
@@ -21,14 +21,18 @@
 
     ],
     "ner":[
-      "CONTINENT",
-      "COUNTRY",
-      "DATE",
-      "LOCATION",
-      "NATIONALITY",
+      "BENEFIT",
+      "BEVERAGE",
+      "EVENT",
+      "INSTRUMENT",
+      "LAW",
+      "LOC",
+      "METHODS",
+      "ORG",
       "PERSON",
       "PRODUCT",
-      "TECHNIQUE",
+      "TOOLS",
+      "VARIETY",
       "VERB"
     ]
   },
@@ -58,22 +62,7 @@
         "r":1.0,
         "f":1.0
       },
-      "LOCATION":{
-        "p":1.0,
-        "r":1.0,
-        "f":1.0
-      },
-      "CONTINENT":{
-        "p":1.0,
-        "r":1.0,
-        "f":1.0
-      },
-      "COUNTRY":{
-        "p":1.0,
-        "r":1.0,
-        "f":1.0
-      },
-      "DATE":{
+      "LOC":{
         "p":1.0,
         "r":1.0,
         "f":1.0
@@ -83,18 +72,53 @@
         "r":1.0,
         "f":1.0
       },
-      "NATIONALITY":{
+      "INSTRUMENT":{
         "p":1.0,
         "r":1.0,
         "f":1.0
       },
-      "TECHNIQUE":{
+      "TOOLS":{
+        "p":1.0,
+        "r":1.0,
+        "f":1.0
+      },
+      "EVENT":{
+        "p":1.0,
+        "r":1.0,
+        "f":1.0
+      },
+      "BEVERAGE":{
+        "p":1.0,
+        "r":1.0,
+        "f":1.0
+      },
+      "BENEFIT":{
+        "p":1.0,
+        "r":1.0,
+        "f":1.0
+      },
+      "METHODS":{
+        "p":1.0,
+        "r":1.0,
+        "f":1.0
+      },
+      "LAW":{
+        "p":1.0,
+        "r":1.0,
+        "f":1.0
+      },
+      "ORG":{
+        "p":1.0,
+        "r":1.0,
+        "f":1.0
+      },
+      "VARIETY":{
         "p":1.0,
         "r":1.0,
         "f":1.0
       }
     },
-    "tok2vec_loss":0.0000005666,
-    "ner_loss":0.0000008616
+    "tok2vec_loss":380.6609247255,
+    "ner_loss":25.9697084264
   }
 }

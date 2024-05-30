@@ -1,637 +1,1094 @@
 {
   "classes": [
-      "VERB",
-      "VARIETY",
-      "METHODS",
-      "BEVERAGE",
-      "PRODUCT",
-      "PERSON"
+    "VERB",
+    "METHODS",
+    "BEVERAGE",
+    "PRODUCT",
+    "PERSON",
+    "LOC",
+    "INSTRUMENT",
+    "TOOLS",
+    "EVENT",
+    "BENEFIT",
+    "LAW"
   ],
   "annotations": [
-      [
-          "Coffee was first grown in an area informally called the Coffee Belt. The birthplace of coffee is Africa, Ethiopia specifically. Robusta, discovered much later in the 19th century by botanists in Central and West Africa. \r",
-          {
-              "entities": [
-                  [
-                      0,
-                      6,
-                      "PRODUCT"
-                  ],
-                  [
-                      17,
-                      22,
-                      "VERB"
-                  ],
-                  [
-                      128,
-                      135,
-                      "VARIETY"
-                  ],
-                  [
-                      137,
-                      147,
-                      "VERB"
-                  ],
-                  [
-                      182,
-                      191,
-                      "PERSON"
-                  ]
-              ]
-          }
-      ],
-      [
-          "\r",
-          {
-              "entities": []
-          }
-      ],
-      [
-          "The Ethiopians cultivated coffee for hundreds of years. Yemeni traders began exporting coffee to Persia, Egypt, and the Ottoman Empire. Arabian physician first wrote about coffee sometime in the 10th century.\r",
-          {
-              "entities": [
-                  [
-                      15,
-                      25,
-                      "VERB"
-                  ],
-                  [
-                      26,
-                      32,
-                      "PRODUCT"
-                  ],
-                  [
-                      71,
-                      76,
-                      "VERB"
-                  ],
-                  [
-                      77,
-                      86,
-                      "VERB"
-                  ],
-                  [
-                      87,
-                      93,
-                      "PRODUCT"
-                  ],
-                  [
-                      136,
-                      153,
-                      "PERSON"
-                  ],
-                  [
-                      160,
-                      165,
-                      "VERB"
-                  ],
-                  [
-                      172,
-                      178,
-                      "PRODUCT"
-                  ]
-              ]
-          }
-      ],
-      [
-          "\r",
-          {
-              "entities": []
-          }
-      ],
-      [
-          "South America had an almost perfect climate for growing coffee. The vast land made it a prime spot for cultivating a relatively new crop. This happened back in the 1700s. Cuba has been growing coffee since the mid-18th century. Coffee dates back to the 6th century in Yemen. An amazing technological advancement in brewing developed in Italy in the early 1900s.",
-          {
-              "entities": [
-                  [
-                      48,
-                      55,
-                      "VERB"
-                  ],
-                  [
-                      56,
-                      63,
-                      "PRODUCT"
-                  ],
-                  [
-                      103,
-                      114,
-                      "VERB"
-                  ],
-                  [
-                      185,
-                      192,
-                      "VERB"
-                  ],
-                  [
-                      193,
-                      199,
-                      "PRODUCT"
-                  ],
-                  [
-                      228,
-                      234,
-                      "PRODUCT"
-                  ],
-                  [
-                      323,
-                      332,
-                      "VERB"
-                  ]
-              ]
-          }
-      ],
-      [
-          "Coffee grew in Coffee Belt.\r",
-          {
-              "entities": [
-                  [
-                      0,
-                      6,
-                      "PRODUCT"
-                  ],
-                  [
-                      7,
-                      11,
-                      "VERB"
-                  ]
-              ]
-          }
-      ],
-      [
-          "Coffee originated from Ethiopia. \r",
-          {
-              "entities": [
-                  [
-                      0,
-                      6,
-                      "PRODUCT"
-                  ],
-                  [
-                      7,
-                      17,
-                      "VERB"
-                  ]
-              ]
-          }
-      ],
-      [
-          "Robusta discovered by Botanists discovered. \r",
-          {
-              "entities": [
-                  [
-                      0,
-                      7,
-                      "VARIETY"
-                  ],
-                  [
-                      8,
-                      18,
-                      "VERB"
-                  ]
-              ]
-          }
-      ],
-      [
-          "Robusta discovered in 19th century.\r",
-          {
-              "entities": [
-                  [
-                      0,
-                      7,
-                      "VARIETY"
-                  ],
-                  [
-                      8,
-                      18,
-                      "VERB"
-                  ]
-              ]
-          }
-      ],
-      [
-          "Robusta discovered in Central Africa. \r",
-          {
-              "entities": [
-                  [
-                      0,
-                      7,
-                      "VARIETY"
-                  ],
-                  [
-                      8,
-                      18,
-                      "VERB"
-                  ]
-              ]
-          }
-      ],
-      [
-          "Robusta discovered in West Africa.\r",
-          {
-              "entities": [
-                  [
-                      0,
-                      7,
-                      "VARIETY"
-                  ],
-                  [
-                      8,
-                      18,
-                      "VERB"
-                  ]
-              ]
-          }
-      ],
-      [
-          "Traders exported Coffee.\r",
-          {
-              "entities": [
-                  [
-                      0,
-                      7,
-                      "PERSON"
-                  ],
-                  [
-                      8,
-                      16,
-                      "VERB"
-                  ],
-                  [
-                      17,
-                      23,
-                      "PRODUCT"
-                  ]
-              ]
-          }
-      ],
-      [
-          "Coffee exported to Ottoman Empire. \r",
-          {
-              "entities": [
-                  [
-                      0,
-                      6,
-                      "PRODUCT"
-                  ],
-                  [
-                      7,
-                      15,
-                      "VERB"
-                  ]
-              ]
-          }
-      ],
-      [
-          "Coffee exported to Egypt. \r",
-          {
-              "entities": [
-                  [
-                      0,
-                      6,
-                      "PRODUCT"
-                  ],
-                  [
-                      7,
-                      15,
-                      "VERB"
-                  ]
-              ]
-          }
-      ],
-      [
-          "Arabian physician wrote about Coffee. \r",
-          {
-              "entities": [
-                  [
-                      0,
-                      17,
-                      "PERSON"
-                  ],
-                  [
-                      18,
-                      23,
-                      "VERB"
-                  ],
-                  [
-                      30,
-                      36,
-                      "PRODUCT"
-                  ]
-              ]
-          }
-      ],
-      [
-          "Coffee written in 10th century. \r",
-          {
-              "entities": [
-                  [
-                      0,
-                      6,
-                      "PRODUCT"
-                  ],
-                  [
-                      7,
-                      14,
-                      "VERB"
-                  ]
-              ]
-          }
-      ],
-      [
-          "Cuba has been growing Coffee. \r",
-          {
-              "entities": [
-                  [
-                      14,
-                      21,
-                      "VERB"
-                  ],
-                  [
-                      22,
-                      28,
-                      "PRODUCT"
-                  ]
-              ]
-          }
-      ],
-      [
-          "Coffee existed in 6th century. \r",
-          {
-              "entities": [
-                  [
-                      0,
-                      6,
-                      "PRODUCT"
-                  ],
-                  [
-                      7,
-                      14,
-                      "VERB"
-                  ]
-              ]
-          }
-      ],
-      [
-          "Coffee originated in Yemen. \r",
-          {
-              "entities": [
-                  [
-                      0,
-                      6,
-                      "PRODUCT"
-                  ],
-                  [
-                      7,
-                      17,
-                      "VERB"
-                  ]
-              ]
-          }
-      ],
-      [
-          "Italy developed brewing technology. \r",
-          {
-              "entities": [
-                  [
-                      6,
-                      15,
-                      "VERB"
-                  ],
-                  [
-                      16,
-                      34,
-                      "PRODUCT"
-                  ]
-              ]
-          }
-      ],
-      [
-          "brewing technology happened in the early 1900s.\r",
-          {
-              "entities": [
-                  [
-                      0,
-                      18,
-                      "PRODUCT"
-                  ],
-                  [
-                      19,
-                      27,
-                      "VERB"
-                  ]
-              ]
-          }
-      ],
-      [
-          "washing process cleans Coffee.\r",
-          {
-              "entities": [
-                  [
-                      0,
-                      15,
-                      "METHODS"
-                  ],
-                  [
-                      16,
-                      22,
-                      "VERB"
-                  ],
-                  [
-                      23,
-                      29,
-                      "PRODUCT"
-                  ]
-              ]
-          }
-      ],
-      [
-          "Water washes cherries.\r",
-          {
-              "entities": [
-                  [
-                      0,
-                      5,
-                      "PRODUCT"
-                  ],
-                  [
-                      6,
-                      12,
-                      "VERB"
-                  ],
-                  [
-                      13,
-                      21,
-                      "PRODUCT"
-                  ]
-              ]
-          }
-      ],
-      [
-          "washing process removes layers.\r",
-          {
-              "entities": [
-                  [
-                      0,
-                      15,
-                      "METHODS"
-                  ],
-                  [
-                      16,
-                      23,
-                      "VERB"
-                  ],
-                  [
-                      24,
-                      30,
-                      "PRODUCT"
-                  ]
-              ]
-          }
-      ],
-      [
-          "layers impact acidity.\r",
-          {
-              "entities": [
-                  [
-                      0,
-                      6,
-                      "PRODUCT"
-                  ],
-                  [
-                      7,
-                      13,
-                      "VERB"
-                  ],
-                  [
-                      14,
-                      21,
-                      "PRODUCT"
-                  ]
-              ]
-          }
-      ],
-      [
-          "layers impact body.\r",
-          {
-              "entities": [
-                  [
-                      0,
-                      6,
-                      "PRODUCT"
-                  ],
-                  [
-                      7,
-                      13,
-                      "VERB"
-                  ],
-                  [
-                      14,
-                      18,
-                      "PRODUCT"
-                  ]
-              ]
-          }
-      ],
-      [
-          "Central and South America use washing process.\r",
-          {
-              "entities": [
-                  [
-                      26,
-                      29,
-                      "VERB"
-                  ],
-                  [
-                      30,
-                      45,
-                      "METHODS"
-                  ]
-              ]
-          }
-      ],
-      [
-          "Central and South America use washing process.\r",
-          {
-              "entities": [
-                  [
-                      26,
-                      29,
-                      "VERB"
-                  ],
-                  [
-                      30,
-                      45,
-                      "METHODS"
-                  ]
-              ]
-          }
-      ],
-      [
-          "washing process include washed.\r",
-          {
-              "entities": [
-                  [
-                      0,
-                      15,
-                      "METHODS"
-                  ],
-                  [
-                      16,
-                      23,
-                      "VERB"
-                  ],
-                  [
-                      24,
-                      30,
-                      "METHODS"
-                  ]
-              ]
-          }
-      ],
-      [
-          "washing process include semi-washed.\r",
-          {
-              "entities": [
-                  [
-                      0,
-                      15,
-                      "METHODS"
-                  ],
-                  [
-                      16,
-                      23,
-                      "VERB"
-                  ],
-                  [
-                      24,
-                      35,
-                      "METHODS"
-                  ]
-              ]
-          }
-      ],
-      [
-          "washing process include natural.\r",
-          {
-              "entities": [
-                  [
-                      0,
-                      15,
-                      "METHODS"
-                  ],
-                  [
-                      16,
-                      23,
-                      "VERB"
-                  ],
-                  [
-                      24,
-                      31,
-                      "METHODS"
-                  ]
-              ]
-          }
-      ]
+    [
+      "Coffee grew in the Coffee Belt.\r",
+      {
+        "entities": [
+          [0, 6, "PRODUCT"],
+          [7, 11, "VERB"],
+          [19, 30, "LOC"]
+        ]
+      }
+    ],
+    [
+      "Kaldi discovered coffee.\r",
+      {
+        "entities": [
+          [0, 5, "PERSON"],
+          [6, 16, "VERB"],
+          [17, 23, "PRODUCT"]
+        ]
+      }
+    ],
+    [
+      "Kaldi comes from Ethiopia.\r",
+      {
+        "entities": [
+          [0, 5, "PERSON"],
+          [6, 11, "VERB"],
+          [17, 25, "LOC"]
+        ]
+      }
+    ],
+    [
+      "Kaldi plays a pipe while working.\r",
+      {
+        "entities": [
+          [0, 5, "PERSON"],
+          [6, 11, "VERB"],
+          [14, 18, "INSTRUMENT"]
+        ]
+      }
+    ],
+    [
+      "Ethiopians ate coffee berries.\r",
+      {
+        "entities": [
+          [0, 10, "PERSON"],
+          [11, 14, "VERB"],
+          [15, 29, "PRODUCT"]
+        ]
+      }
+    ],
+    [
+      "Ethiopians boiled the berries to innovate ingredients.\r",
+      {
+        "entities": [
+          [0, 10, "PERSON"],
+          [11, 17, "VERB"],
+          [22, 29, "PRODUCT"]
+        ]
+      }
+    ],
+    [
+      "Ethiopians cultivated coffee for hundreds of years.\r",
+      {
+        "entities": [
+          [0, 10, "PERSON"],
+          [11, 21, "VERB"],
+          [22, 28, "PRODUCT"]
+        ]
+      }
+    ],
+    [
+      "Arabian physician first wrote about coffee sometime in the 10th century.\r",
+      {
+        "entities": [
+          [0, 17, "PERSON"],
+          [24, 29, "VERB"],
+          [36, 42, "PRODUCT"]
+        ]
+      }
+    ],
+    [
+      "Rhazes first wrote about coffee in the 10th century.\r",
+      {
+        "entities": [
+          [0, 6, "PERSON"],
+          [13, 18, "VERB"],
+          [25, 31, "PRODUCT"]
+        ]
+      }
+    ],
+    [
+      "Kaldi discovered coffee in Ethiopia.\r",
+      {
+        "entities": [
+          [0, 5, "PERSON"],
+          [6, 16, "VERB"],
+          [17, 23, "PRODUCT"],
+          [27, 35, "LOC"]
+        ]
+      }
+    ],
+    [
+      "Coffee spread to Arabia after Ethiopia.\r",
+      {
+        "entities": [
+          [0, 6, "PRODUCT"],
+          [7, 13, "VERB"],
+          [17, 23, "LOC"],
+          [30, 38, "LOC"]
+        ]
+      }
+    ],
+    [
+      "Arabian religious leaders used coffee to stay awake.\r",
+      {
+        "entities": [
+          [0, 25, "PERSON"],
+          [26, 30, "VERB"],
+          [31, 37, "PRODUCT"]
+        ]
+      }
+    ],
+    [
+      "Coffee became a culture in Arabia.\r",
+      {
+        "entities": [
+          [0, 6, "PRODUCT"],
+          [7, 13, "VERB"],
+          [27, 33, "LOC"]
+        ]
+      }
+    ],
+    [
+      "Moslem homes had coffee rooms.\r",
+      {
+        "entities": [
+          [0, 12, "LOC"],
+          [13, 16, "VERB"],
+          [17, 29, "LOC"]
+        ]
+      }
+    ],
+    [
+      "Coffee became a traded commodity in the Turkish Empire in 1536.\r",
+      {
+        "entities": [
+          [0, 6, "PRODUCT"],
+          [7, 13, "VERB"],
+          [16, 32, "TOOLS"]
+        ]
+      }
+    ],
+    [
+      "Coffee became a traded commodity.\r",
+      {
+        "entities": [
+          [0, 6, "PRODUCT"],
+          [7, 13, "VERB"],
+          [16, 32, "TOOLS"]
+        ]
+      }
+    ],
+    [
+      "Coffee traded happened in the Turkish Empire.\r",
+      {
+        "entities": [
+          [0, 13, "EVENT"],
+          [14, 22, "VERB"]
+        ]
+      }
+    ],
+    [
+      "Coffee beans shipped from Yemen's Port of Mokha.\r",
+      {
+        "entities": [
+          [0, 12, "PRODUCT"],
+          [13, 20, "VERB"],
+          [26, 47, "LOC"]
+        ]
+      }
+    ],
+    [
+      "Mokha spelled Mocha or Mukha.\r",
+      {
+        "entities": [
+          [0, 5, "PRODUCT"],
+          [6, 13, "VERB"],
+          [14, 19, "PRODUCT"],
+          [23, 28, "PRODUCT"]
+        ]
+      }
+    ],
+    [
+      "Mocha came from Mokha. \r",
+      {
+        "entities": [
+          [0, 5, "PRODUCT"],
+          [6, 10, "VERB"],
+          [16, 21, "PRODUCT"]
+        ]
+      }
+    ],
+    [
+      "French and Venetian merchants took coffee beans from Egyptian warehouses.\r",
+      {
+        "entities": [
+          [0, 29, "PERSON"],
+          [30, 34, "VERB"],
+          [35, 47, "PRODUCT"],
+          [53, 72, "LOC"]
+        ]
+      }
+    ],
+    [
+      "Baba Budan went on a pilgrimage to Mecca.\r",
+      {
+        "entities": [
+          [0, 10, "PERSON"],
+          [11, 15, "VERB"],
+          [35, 40, "LOC"]
+        ]
+      }
+    ],
+    [
+      "Baba Budan stopped in a Yemen port city.\r",
+      {
+        "entities": [
+          [0, 10, "PERSON"],
+          [11, 18, "VERB"],
+          [24, 39, "LOC"]
+        ]
+      }
+    ],
+    [
+      "Baba Budan liked quahwa. \r",
+      {
+        "entities": [
+          [0, 10, "PERSON"],
+          [11, 16, "VERB"],
+          [17, 23, "BEVERAGE"]
+        ]
+      }
+    ],
+    [
+      "Baba Budan stole seven seeds.\r",
+      {
+        "entities": [
+          [0, 10, "PERSON"],
+          [11, 16, "VERB"],
+          [23, 28, "PRODUCT"]
+        ]
+      }
+    ],
+    [
+      "The seeds ended up in the Mysore mountains of India.\r",
+      { "entities": [] }
+    ],
+    [
+      "The Dutch traders transported coffee trees from India to Holland in the late 1500s.\r",
+      {
+        "entities": [
+          [0, 17, "PERSON"],
+          [18, 29, "VERB"],
+          [30, 42, "PRODUCT"],
+          [48, 53, "LOC"],
+          [57, 64, "LOC"]
+        ]
+      }
+    ],
+    [
+      "The Dutch traders stopped in Ceylon on the way.\r",
+      {
+        "entities": [
+          [0, 17, "PERSON"],
+          [18, 25, "VERB"],
+          [29, 35, "LOC"]
+        ]
+      }
+    ],
+    [
+      "Coffee infiltrated Europe.\r",
+      {
+        "entities": [
+          [0, 6, "PRODUCT"],
+          [7, 18, "VERB"],
+          [19, 25, "LOC"]
+        ]
+      }
+    ],
+    [
+      "Coffee replaced beer and wine for breakfast in the American colonies.\r",
+      {
+        "entities": [
+          [0, 6, "PRODUCT"],
+          [7, 15, "VERB"],
+          [16, 20, "BEVERAGE"],
+          [25, 29, "BEVERAGE"]
+        ]
+      }
+    ],
+    [
+      "Coffee was used for medicinal benefits.\r",
+      {
+        "entities": [
+          [0, 6, "PRODUCT"],
+          [11, 15, "VERB"],
+          [20, 38, "BENEFIT"]
+        ]
+      }
+    ],
+    [
+      "Coffee caught on slowly in Europe.\r",
+      {
+        "entities": [
+          [0, 6, "PRODUCT"],
+          [7, 13, "VERB"],
+          [27, 33, "LOC"]
+        ]
+      }
+    ],
+    [
+      "Austria opened its first coffeehouse in 1683.\r",
+      {
+        "entities": [
+          [0, 7, "LOC"],
+          [8, 14, "VERB"],
+          [25, 36, "LOC"]
+        ]
+      }
+    ],
+    [
+      "Austria received Turkish coffee from the Battle of Vienna.\r",
+      {
+        "entities": [
+          [0, 7, "LOC"],
+          [8, 16, "VERB"],
+          [17, 31, "BEVERAGE"],
+          [41, 57, "EVENT"]
+        ]
+      }
+    ],
+    [
+      "London coffeehouses were called Penny Universities.\r",
+      {
+        "entities": [
+          [0, 19, "LOC"],
+          [25, 31, "VERB"],
+          [32, 50, "LOC"]
+        ]
+      }
+    ],
+    [
+      "Jonathan’s coffeehouse opened in 1698 and became the London Stock Exchange.\r",
+      {
+        "entities": [
+          [0, 22, "LOC"],
+          [23, 29, "VERB"]
+        ]
+      }
+    ],
+    [
+      "Italy's street vendors added coffee to lemonade.\r",
+      {
+        "entities": [
+          [0, 22, "PERSON"],
+          [23, 28, "VERB"],
+          [29, 35, "PRODUCT"],
+          [39, 47, "PRODUCT"]
+        ]
+      }
+    ],
+    [
+      "Francois Procope opened Café de Procope in 1689.\r",
+      {
+        "entities": [
+          [0, 16, "PERSON"],
+          [17, 23, "VERB"],
+          [24, 39, "LOC"]
+        ]
+      }
+    ],
+    [
+      "The French created infusion-style brewing.\r",
+      {
+        "entities": [
+          [0, 10, "PERSON"],
+          [11, 18, "VERB"],
+          [19, 41, "METHODS"]
+        ]
+      }
+    ],
+    [
+      "Honore de Balzac enjoyed consuming dry ground coffee.\r",
+      {
+        "entities": [
+          [0, 16, "PERSON"],
+          [25, 34, "VERB"],
+          [35, 52, "PRODUCT"]
+        ]
+      }
+    ],
+    [
+      "Seedlings transported from Mokha to Amsterdam in 1616 thrived.\r",
+      {
+        "entities": [
+          [0, 9, "PRODUCT"],
+          [10, 21, "VERB"],
+          [27, 32, "LOC"],
+          [36, 45, "LOC"]
+        ]
+      }
+    ],
+    [
+      "London had over 2,000 coffeehouses in 1700s.\r",
+      {
+        "entities": [
+          [0, 6, "LOC"],
+          [7, 10, "VERB"],
+          [16, 34, "LOC"]
+        ]
+      }
+    ],
+    [
+      "People gathered in coffeehouses to share interests.\r",
+      {
+        "entities": [
+          [0, 6, "PERSON"],
+          [7, 15, "VERB"],
+          [19, 31, "LOC"]
+        ]
+      }
+    ],
+    [
+      "Coffee became more popular than beer.\r",
+      {
+        "entities": [
+          [0, 6, "PRODUCT"],
+          [7, 13, "VERB"],
+          [32, 36, "PRODUCT"]
+        ]
+      }
+    ],
+    [
+      "Penny universities turned into private clubs.\r",
+      {
+        "entities": [
+          [0, 18, "LOC"],
+          [19, 25, "VERB"],
+          [31, 44, "LOC"]
+        ]
+      }
+    ],
+    [
+      "Tea became more popular than coffee.\r",
+      {
+        "entities": [
+          [0, 3, "PRODUCT"],
+          [4, 10, "VERB"],
+          [29, 35, "PRODUCT"]
+        ]
+      }
+    ],
+    [
+      "Boston opened its first coffeehouse in 1689.\r",
+      {
+        "entities": [
+          [0, 6, "LOC"],
+          [7, 13, "VERB"],
+          [24, 35, "PRODUCT"]
+        ]
+      }
+    ],
+    [
+      "The Green Dragon coffeehouse operated from 1679 to 1832.\r",
+      {
+        "entities": [
+          [0, 28, "LOC"],
+          [29, 37, "VERB"]
+        ]
+      }
+    ],
+    [
+      "Rebellion leaders met at the Green Dragon.\r",
+      {
+        "entities": [
+          [0, 17, "PERSON"],
+          [18, 21, "VERB"],
+          [29, 41, "LOC"]
+        ]
+      }
+    ],
+    ["Paul Revere is a rebellion leaders.\r", { "entities": [] }],
+    ["John Adams is a rebellion leaders.\r", { "entities": [] }],
+    ["John Otis is a rebellion leaders.\r", { "entities": [] }],
+    [
+      "King George proposed the Stamp Act of 1765.\r",
+      {
+        "entities": [
+          [0, 11, "PERSON"],
+          [12, 20, "VERB"],
+          [25, 34, "LAW"]
+        ]
+      }
+    ],
+    [
+      "Java coffee is brought by coffee exporters.\r",
+      {
+        "entities": [
+          [0, 11, "BEVERAGE"],
+          [15, 22, "VERB"],
+          [26, 42, "PERSON"]
+        ]
+      }
+    ],
+    [
+      "Ethiopia coffee is brought by coffee exporters.\r",
+      {
+        "entities": [
+          [0, 15, "BEVERAGE"],
+          [19, 26, "VERB"],
+          [30, 46, "PERSON"]
+        ]
+      }
+    ],
+    [
+      "Coffee exporters brought names like Java Coffee and Ethiopia Coffee to market.\r",
+      { "entities": [] }
+    ],
+    [
+      "The Dutch were the most influential in the coffee trade.\r",
+      { "entities": [] }
+    ],
+    [
+      "The Dutch brought coffee plants to America.\r",
+      {
+        "entities": [
+          [0, 9, "PERSON"],
+          [10, 17, "VERB"],
+          [18, 31, "PRODUCT"]
+        ]
+      }
+    ],
+    [
+      "France obtained coffee seeds from the Netherlands.\r",
+      { "entities": [] }
+    ],
+    ["France gave coffee seeds to Louis XIV.\r", { "entities": [] }],
+    [
+      "Coffee seeds grew well in Paris.\r",
+      {
+        "entities": [
+          [0, 12, "PRODUCT"],
+          [13, 17, "VERB"],
+          [26, 31, "LOC"]
+        ]
+      }
+    ],
+    [
+      "Gabriel Mathieu de Clieu brought seeds to Martinique.\r",
+      {
+        "entities": [
+          [0, 24, "PERSON"],
+          [25, 32, "VERB"],
+          [33, 38, "PRODUCT"],
+          [42, 52, "PERSON"]
+        ]
+      }
+    ],
+    ["Seeds developed into Typica coffee plants.\r", { "entities": [] }],
+    [
+      "A border dispute happened between French Guyana and Dutch Guyana.\r",
+      { "entities": [] }
+    ],
+    [
+      "Francisco de Melho Palheta was a Portuguese Brazilian mediator.\r",
+      { "entities": [] }
+    ],
+    [
+      "Guyanese governors asked Francisco de Melho Palheta for help.\r",
+      {
+        "entities": [
+          [0, 18, "PERSON"],
+          [19, 24, "VERB"],
+          [25, 51, "PERSON"]
+        ]
+      }
+    ],
+    [
+      "Francisco de Melho Palheta fell in love with the French governor's wife.\r",
+      { "entities": [] }
+    ],
+    [
+      "Governor's wife gave Francisco de Melho Palheta a bouquet with coffee cherries.\r",
+      { "entities": [] }
+    ],
+    [
+      "Francisco de Melho Palheta planted coffee cherries in Brazil.\r",
+      {
+        "entities": [
+          [0, 26, "PERSON"],
+          [27, 34, "VERB"],
+          [35, 50, "PRODUCT"],
+          [54, 60, "LOC"]
+        ]
+      }
+    ],
+    [
+      "These seeds became the first coffee planted in Brazil.\r",
+      { "entities": [] }
+    ],
+    [
+      "Brazil produces the most coffee.",
+      {
+        "entities": [
+          [0, 6, "LOC"],
+          [7, 15, "VERB"],
+          [25, 31, "PRODUCT"]
+        ]
+      }
+    ],
+    [
+      "Angelo Moriondo is one of the notable Italians who invented espresso machines.\r",
+      {
+        "entities": [
+          [0, 15, "PERSON"],
+          [51, 59, "VERB"],
+          [60, 77, "PRODUCT"]
+        ]
+      }
+    ],
+    [
+      "Luigi Bezzera is one of the notable Italians who invented espresso machines.\r",
+      {
+        "entities": [
+          [0, 13, "PERSON"],
+          [49, 57, "VERB"],
+          [58, 75, "PRODUCT"]
+        ]
+      }
+    ],
+    [
+      "Desiderio Pavoni is one of the notable Italians who invented espresso machines.\r",
+      {
+        "entities": [
+          [0, 16, "PERSON"],
+          [52, 60, "VERB"],
+          [61, 78, "PRODUCT"]
+        ]
+      }
+    ],
+    [
+      "Achille Gaggia is one of the notable Italians who invented espresso machines.\r",
+      {
+        "entities": [
+          [0, 14, "PERSON"],
+          [50, 58, "VERB"],
+          [59, 76, "PRODUCT"]
+        ]
+      }
+    ],
+    [
+      "Ernesto Valente is one of the notable Italians who invented espresso machines.\r",
+      {
+        "entities": [
+          [0, 15, "PERSON"],
+          [51, 59, "VERB"],
+          [60, 77, "PRODUCT"]
+        ]
+      }
+    ],
+    [
+      "Angelo Moriondo comes from Turin.\r",
+      {
+        "entities": [
+          [0, 15, "PERSON"],
+          [16, 21, "VERB"],
+          [27, 32, "LOC"]
+        ]
+      }
+    ],
+    [
+      "Angelo Moriondo is credited with having the first patent on a steam-driven, instantaneous coffee-making machine.\r",
+      { "entities": [] }
+    ],
+    [
+      "Luigi Bezzera comes from Milan.\r",
+      {
+        "entities": [
+          [0, 13, "PERSON"],
+          [14, 19, "VERB"],
+          [25, 30, "LOC"]
+        ]
+      }
+    ],
+    [
+      "Luigi Bezzera improved Moriondo’s machine. \r",
+      {
+        "entities": [
+          [0, 13, "PERSON"],
+          [14, 22, "VERB"],
+          [23, 41, "PRODUCT"]
+        ]
+      }
+    ],
+    [
+      "Luigi Bezzera patented a single-portion brewer in 1902.\r",
+      {
+        "entities": [
+          [0, 13, "PERSON"],
+          [14, 22, "VERB"],
+          [25, 46, "TOOLS"]
+        ]
+      }
+    ],
+    [
+      "Desiderio Pavoni purchased Bezzera’s patent.\r",
+      {
+        "entities": [
+          [0, 16, "PERSON"],
+          [17, 26, "VERB"],
+          [27, 43, "PRODUCT"]
+        ]
+      }
+    ],
+    [
+      "Desiderio Pavoni started producing machines.\r",
+      {
+        "entities": [
+          [0, 16, "PERSON"],
+          [17, 24, "VERB"],
+          [25, 43, "EVENT"]
+        ]
+      }
+    ],
+    [
+      "Achille Gaggia invented the lever-driven, high-pressure espresso machine nearly 30 years later.\r",
+      {
+        "entities": [
+          [0, 14, "PERSON"],
+          [15, 23, "VERB"],
+          [28, 40, "TOOLS"]
+        ]
+      }
+    ],
+    [
+      "Ernesto Valente introduced the E61 espresso machine. \r",
+      {
+        "entities": [
+          [0, 15, "PERSON"],
+          [16, 26, "VERB"],
+          [31, 51, "TOOLS"]
+        ]
+      }
+    ],
+    [
+      "Ernesto Valente worked for Faema.",
+      {
+        "entities": [
+          [0, 15, "PERSON"],
+          [16, 22, "VERB"],
+          [27, 32, "ORG"]
+        ]
+      }
+    ],
+    [
+      "Type of coffee drinks are doppio, ristretto, lungo, macchiato, latte, mocha, flat white, americano, and cortado.",
+      {
+        "entities": [
+          [26, 32, "BEVERAGE"],
+          [34, 43, "BEVERAGE"],
+          [45, 50, "BEVERAGE"],
+          [52, 61, "BEVERAGE"],
+          [63, 68, "BEVERAGE"],
+          [70, 75, "BEVERAGE"],
+          [77, 87, "BEVERAGE"],
+          [89, 98, "BEVERAGE"],
+          [104, 111, "BEVERAGE"]
+        ]
+      }
+    ],
+    [
+      "Coffee was first grown in an area informally called the Coffee Belt. The birthplace of coffee is Africa, Ethiopia specifically. Robusta, discovered much later in the 19th century by botanists in Central and West Africa. \r",
+      {
+        "entities": [
+          [0, 6, "PRODUCT"],
+          [17, 22, "VERB"],
+          [128, 135, "VARIETY"],
+          [137, 147, "VERB"],
+          [182, 191, "PERSON"]
+        ]
+      }
+    ],
+    [
+      "\r",
+      {
+        "entities": []
+      }
+    ],
+    [
+      "The Ethiopians cultivated coffee for hundreds of years. Yemeni traders began exporting coffee to Persia, Egypt, and the Ottoman Empire. Arabian physician first wrote about coffee sometime in the 10th century.\r",
+      {
+        "entities": [
+          [15, 25, "VERB"],
+          [26, 32, "PRODUCT"],
+          [71, 76, "VERB"],
+          [77, 86, "VERB"],
+          [87, 93, "PRODUCT"],
+          [136, 153, "PERSON"],
+          [160, 165, "VERB"],
+          [172, 178, "PRODUCT"]
+        ]
+      }
+    ],
+    [
+      "\r",
+      {
+        "entities": []
+      }
+    ],
+    [
+      "South America had an almost perfect climate for growing coffee. The vast land made it a prime spot for cultivating a relatively new crop. This happened back in the 1700s. Cuba has been growing coffee since the mid-18th century. Coffee dates back to the 6th century in Yemen. An amazing technological advancement in brewing developed in Italy in the early 1900s.",
+      {
+        "entities": [
+          [48, 55, "VERB"],
+          [56, 63, "PRODUCT"],
+          [103, 114, "VERB"],
+          [185, 192, "VERB"],
+          [193, 199, "PRODUCT"],
+          [228, 234, "PRODUCT"],
+          [323, 332, "VERB"]
+        ]
+      }
+    ],
+    [
+      "Coffee grew in Coffee Belt.\r",
+      {
+        "entities": [
+          [0, 6, "PRODUCT"],
+          [7, 11, "VERB"]
+        ]
+      }
+    ],
+    [
+      "Coffee originated from Ethiopia. \r",
+      {
+        "entities": [
+          [0, 6, "PRODUCT"],
+          [7, 17, "VERB"]
+        ]
+      }
+    ],
+    [
+      "Robusta discovered by Botanists discovered. \r",
+      {
+        "entities": [
+          [0, 7, "VARIETY"],
+          [8, 18, "VERB"]
+        ]
+      }
+    ],
+    [
+      "Robusta discovered in 19th century.\r",
+      {
+        "entities": [
+          [0, 7, "VARIETY"],
+          [8, 18, "VERB"]
+        ]
+      }
+    ],
+    [
+      "Robusta discovered in Central Africa. \r",
+      {
+        "entities": [
+          [0, 7, "VARIETY"],
+          [8, 18, "VERB"]
+        ]
+      }
+    ],
+    [
+      "Robusta discovered in West Africa.\r",
+      {
+        "entities": [
+          [0, 7, "VARIETY"],
+          [8, 18, "VERB"]
+        ]
+      }
+    ],
+    [
+      "Traders exported Coffee.\r",
+      {
+        "entities": [
+          [0, 7, "PERSON"],
+          [8, 16, "VERB"],
+          [17, 23, "PRODUCT"]
+        ]
+      }
+    ],
+    [
+      "Coffee exported to Ottoman Empire. \r",
+      {
+        "entities": [
+          [0, 6, "PRODUCT"],
+          [7, 15, "VERB"]
+        ]
+      }
+    ],
+    [
+      "Coffee exported to Egypt. \r",
+      {
+        "entities": [
+          [0, 6, "PRODUCT"],
+          [7, 15, "VERB"]
+        ]
+      }
+    ],
+    [
+      "Arabian physician wrote about Coffee. \r",
+      {
+        "entities": [
+          [0, 17, "PERSON"],
+          [18, 23, "VERB"],
+          [30, 36, "PRODUCT"]
+        ]
+      }
+    ],
+    [
+      "Coffee written in 10th century. \r",
+      {
+        "entities": [
+          [0, 6, "PRODUCT"],
+          [7, 14, "VERB"]
+        ]
+      }
+    ],
+    [
+      "Cuba has been growing Coffee. \r",
+      {
+        "entities": [
+          [14, 21, "VERB"],
+          [22, 28, "PRODUCT"]
+        ]
+      }
+    ],
+    [
+      "Coffee existed in 6th century. \r",
+      {
+        "entities": [
+          [0, 6, "PRODUCT"],
+          [7, 14, "VERB"]
+        ]
+      }
+    ],
+    [
+      "Coffee originated in Yemen. \r",
+      {
+        "entities": [
+          [0, 6, "PRODUCT"],
+          [7, 17, "VERB"]
+        ]
+      }
+    ],
+    [
+      "Italy developed brewing technology. \r",
+      {
+        "entities": [
+          [6, 15, "VERB"],
+          [16, 34, "PRODUCT"]
+        ]
+      }
+    ],
+    [
+      "brewing technology happened in the early 1900s.\r",
+      {
+        "entities": [
+          [0, 18, "PRODUCT"],
+          [19, 27, "VERB"]
+        ]
+      }
+    ],
+    [
+      "washing process cleans Coffee.\r",
+      {
+        "entities": [
+          [0, 15, "METHODS"],
+          [16, 22, "VERB"],
+          [23, 29, "PRODUCT"]
+        ]
+      }
+    ],
+    [
+      "Water washes cherries.\r",
+      {
+        "entities": [
+          [0, 5, "PRODUCT"],
+          [6, 12, "VERB"],
+          [13, 21, "PRODUCT"]
+        ]
+      }
+    ],
+    [
+      "washing process removes layers.\r",
+      {
+        "entities": [
+          [0, 15, "METHODS"],
+          [16, 23, "VERB"],
+          [24, 30, "PRODUCT"]
+        ]
+      }
+    ],
+    [
+      "layers impact acidity.\r",
+      {
+        "entities": [
+          [0, 6, "PRODUCT"],
+          [7, 13, "VERB"],
+          [14, 21, "PRODUCT"]
+        ]
+      }
+    ],
+    [
+      "layers impact body.\r",
+      {
+        "entities": [
+          [0, 6, "PRODUCT"],
+          [7, 13, "VERB"],
+          [14, 18, "PRODUCT"]
+        ]
+      }
+    ],
+    [
+      "Central and South America use washing process.\r",
+      {
+        "entities": [
+          [26, 29, "VERB"],
+          [30, 45, "METHODS"]
+        ]
+      }
+    ],
+    [
+      "Central and South America use washing process.\r",
+      {
+        "entities": [
+          [26, 29, "VERB"],
+          [30, 45, "METHODS"]
+        ]
+      }
+    ],
+    [
+      "washing process include washed.\r",
+      {
+        "entities": [
+          [0, 15, "METHODS"],
+          [16, 23, "VERB"],
+          [24, 30, "METHODS"]
+        ]
+      }
+    ],
+    [
+      "washing process include semi-washed.\r",
+      {
+        "entities": [
+          [0, 15, "METHODS"],
+          [16, 23, "VERB"],
+          [24, 35, "METHODS"]
+        ]
+      }
+    ],
+    [
+      "washing process include natural.\r",
+      {
+        "entities": [
+          [0, 15, "METHODS"],
+          [16, 23, "VERB"],
+          [24, 31, "METHODS"]
+        ]
+      }
+    ]
   ]
 }
