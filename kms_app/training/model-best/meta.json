@@ -2,13 +2,13 @@
   "lang":"en",
   "name":"pipeline",
   "version":"0.0.0",
-  "spacy_version":">=3.7.2,<3.8.0",
+  "spacy_version":">=3.7.4,<3.8.0",
   "description":"",
   "author":"",
   "email":"",
   "url":"",
   "license":"",
-  "spacy_git_version":"a89eae928",
+  "spacy_git_version":"bff8725f4",
   "vectors":{
     "width":0,
     "vectors":0,
@@ -24,15 +24,11 @@
       "CONTINENT",
       "COUNTRY",
       "DATE",
-      "LOC",
       "LOCATION",
-      "METHODS",
       "NATIONALITY",
       "PERSON",
       "PRODUCT",
-      "QUANTITY",
       "TECHNIQUE",
-      "VARIETY",
       "VERB"
     ]
   },
@@ -62,32 +58,7 @@
         "r":1.0,
         "f":1.0
       },
-      "VARIETY":{
-        "p":1.0,
-        "r":1.0,
-        "f":1.0
-      },
-      "PERSON":{
-        "p":1.0,
-        "r":1.0,
-        "f":1.0
-      },
       "LOCATION":{
-        "p":1.0,
-        "r":1.0,
-        "f":1.0
-      },
-      "METHODS":{
-        "p":1.0,
-        "r":1.0,
-        "f":1.0
-      },
-      "QUANTITY":{
-        "p":1.0,
-        "r":1.0,
-        "f":1.0
-      },
-      "LOC":{
         "p":1.0,
         "r":1.0,
         "f":1.0
@@ -107,6 +78,11 @@
         "r":1.0,
         "f":1.0
       },
+      "PERSON":{
+        "p":1.0,
+        "r":1.0,
+        "f":1.0
+      },
       "NATIONALITY":{
         "p":1.0,
         "r":1.0,
@@ -118,7 +94,7 @@
         "f":1.0
       }
     },
-    "tok2vec_loss":1026.8077257282,
-    "ner_loss":46.2197614243
+    "tok2vec_loss":0.0000005666,
+    "ner_loss":0.0000008616
   }
 }

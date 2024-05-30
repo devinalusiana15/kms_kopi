@@ -18,6 +18,7 @@ from django.utils.safestring import mark_safe
 from .forms import LoginForm, UploadFileForm
 from .models import (
     nlp_default,
+    nlp_custom,
     merge_entities,
     get_fuseki_data,
     Uploader,
@@ -74,8 +75,7 @@ def uploadKnowledge(request):
                     handle_uploaded_file(uploaded_file)                    
                     create_and_save_inverted_index(new_document)
 
-                    doc_ontology = extract_text_from_pdf(new_document.document_path)
-                    doc_ontology = merge_entities(nlp_default(doc_ontology)).ents
+                    doc_ontology = extract_text_from_pdf_onto(new_document.document_path)
                     
                     print(doc_ontology)
                     ontology = generate_ontology(doc_ontology)
@@ -327,6 +327,26 @@ def extract_text_from_pdf(context_path):
         print("Error:", e)
     return text
 
+def extract_text_from_pdf_onto(context_path):
+    text = ""
+    try:
+        with fitz.open(context_path) as doc:
+            for page in doc:
+                text += page.get_text()
+    except Exception as e:
+        print("Error:", e)
+
+    text = text.replace('\n', ' ')
+
+    sentences = text.split('.')
+
+    document = []
+    for sentence in sentences:
+        doc = merge_entities(nlp_custom(sentence))
+        document.append(doc)
+
+    return document
+
 @transaction.atomic
 def create_and_save_inverted_index(document):
     text = extract_text_from_pdf(document.document_path)
@@ -418,10 +438,12 @@ def generate_ontology(doc_ontology):
 
     classes = set()
     object_properties = set()
+    print(f'ini doc_ontology:{doc_ontology}')
 
     for sent in doc_ontology:
         prev_entity = None
-        for ent in sent.ents:
+        print(f'ini entitas: {sent.ents}')
+        for ent in sent.ents:            
             if ent.label_ != '':
                 if ent.label_ == 'VERB':
                     if prev_entity:
@@ -447,7 +469,6 @@ def generate_ontology(doc_ontology):
                     prev_entity = None  # Reset prev_entity
                 else:
                     prev_entity = {"text": ent.text, "type": ent.label_}
-                    # Add classes for entities if not already present
                     classes.add(ent.label_)
 
     for sent in doc_ontology:
