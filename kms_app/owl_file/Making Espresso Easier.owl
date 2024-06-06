@@ -1,0 +1,192 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix owl: <http://www.w3.org/2002/07/owl#> .
+    @prefix coffee: <http://www.semanticweb.org/ariana/coffee#> .
+
+    # Ontology Header
+    <http://www.semanticweb.org/ariana/coffee#>
+        rdf:type owl:Ontology ;
+        owl:versionIRI <http://www.semanticweb.org/ariana/coffee#1.0> .
+
+    # Classes
+    
+                        <http://www.semanticweb.org/ariana/coffee#invented> rdfs:domain <http://www.semanticweb.org/ariana/coffee#NORP> .
+                        
+                            <http://www.semanticweb.org/ariana/coffee#invented> rdfs:range <http://www.semanticweb.org/ariana/coffee#PERSON> .
+                            
+                            <http://www.semanticweb.org/ariana/coffee#Italians> coffee:invented <http://www.semanticweb.org/ariana/coffee#Angelo_Moriondo> .
+                            
+                        <http://www.semanticweb.org/ariana/coffee#invented> rdfs:domain <http://www.semanticweb.org/ariana/coffee#NORP> .
+                        
+                        <http://www.semanticweb.org/ariana/coffee#invented> rdfs:domain <http://www.semanticweb.org/ariana/coffee#NORP> .
+                        
+                        <http://www.semanticweb.org/ariana/coffee#invented> rdfs:domain <http://www.semanticweb.org/ariana/coffee#NORP> .
+                        
+                        <http://www.semanticweb.org/ariana/coffee#invented> rdfs:domain <http://www.semanticweb.org/ariana/coffee#NORP> .
+                        
+                        <http://www.semanticweb.org/ariana/coffee#invented> rdfs:domain <http://www.semanticweb.org/ariana/coffee#NORP> .
+                        
+                        <http://www.semanticweb.org/ariana/coffee#comes> rdfs:domain <http://www.semanticweb.org/ariana/coffee#PERSON> .
+                        
+                            <http://www.semanticweb.org/ariana/coffee#comes> rdfs:range <http://www.semanticweb.org/ariana/coffee#LOC> .
+                            
+                            <http://www.semanticweb.org/ariana/coffee#Angelo_Moriondo> coffee:comes <http://www.semanticweb.org/ariana/coffee#Turin> .
+                            
+                        <http://www.semanticweb.org/ariana/coffee#comes> rdfs:domain <http://www.semanticweb.org/ariana/coffee#PERSON> .
+                        
+                            <http://www.semanticweb.org/ariana/coffee#comes> rdfs:range <http://www.semanticweb.org/ariana/coffee#LOC> .
+                            
+                            <http://www.semanticweb.org/ariana/coffee#Luigi_Bezzera> coffee:comes <http://www.semanticweb.org/ariana/coffee#Milan> .
+                            
+                        <http://www.semanticweb.org/ariana/coffee#improved> rdfs:domain <http://www.semanticweb.org/ariana/coffee#PERSON> .
+                        
+                        <http://www.semanticweb.org/ariana/coffee#patented> rdfs:domain <http://www.semanticweb.org/ariana/coffee#PERSON> .
+                        
+                            <http://www.semanticweb.org/ariana/coffee#patented> rdfs:range <http://www.semanticweb.org/ariana/coffee#TOOLS> .
+                            
+                            <http://www.semanticweb.org/ariana/coffee#Luigi_Bezzera> coffee:patented <http://www.semanticweb.org/ariana/coffee#single_-_portion_brewer> .
+                            
+                        <http://www.semanticweb.org/ariana/coffee#purchased> rdfs:domain <http://www.semanticweb.org/ariana/coffee#PERSON> .
+                        
+                        <http://www.semanticweb.org/ariana/coffee#started> rdfs:domain <http://www.semanticweb.org/ariana/coffee#PERSON> .
+                        
+                        <http://www.semanticweb.org/ariana/coffee#invented> rdfs:domain <http://www.semanticweb.org/ariana/coffee#PERSON> .
+                        
+                            <http://www.semanticweb.org/ariana/coffee#invented> rdfs:range <http://www.semanticweb.org/ariana/coffee#TOOLS> .
+                            
+                            <http://www.semanticweb.org/ariana/coffee#Achille_Gaggia> coffee:invented <http://www.semanticweb.org/ariana/coffee#lever_-_driven> .
+                            
+                        <http://www.semanticweb.org/ariana/coffee#introduced> rdfs:domain <http://www.semanticweb.org/ariana/coffee#PERSON> .
+                        
+                            <http://www.semanticweb.org/ariana/coffee#introduced> rdfs:range <http://www.semanticweb.org/ariana/coffee#TOOLS> .
+                            
+                            <http://www.semanticweb.org/ariana/coffee#Ernesto_Valente> coffee:introduced <http://www.semanticweb.org/ariana/coffee#E61_espresso_machine> .
+                            
+                        <http://www.semanticweb.org/ariana/coffee#worked> rdfs:domain <http://www.semanticweb.org/ariana/coffee#PERSON> .
+                        
+                            <http://www.semanticweb.org/ariana/coffee#worked> rdfs:range <http://www.semanticweb.org/ariana/coffee#ORG> .
+                            
+                            <http://www.semanticweb.org/ariana/coffee#Ernesto_Valente> coffee:worked <http://www.semanticweb.org/ariana/coffee#Faema> .
+                            
+                        <http://www.semanticweb.org/ariana/coffee#invention> rdfs:domain <http://www.semanticweb.org/ariana/coffee#PERSON> .
+                        
+                    <http://www.semanticweb.org/ariana/coffee#three> rdf:type <http://www.semanticweb.org/ariana/coffee#CARDINAL> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Italians> rdf:type <http://www.semanticweb.org/ariana/coffee#NORP> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Angelo_Moriondo> rdf:type <http://www.semanticweb.org/ariana/coffee#PERSON> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Luigi_Bezzera> rdf:type <http://www.semanticweb.org/ariana/coffee#PERSON> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Desiderio_Pavoni> rdf:type <http://www.semanticweb.org/ariana/coffee#PERSON> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Achille_Gaggia> rdf:type <http://www.semanticweb.org/ariana/coffee#PERSON> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Ernesto_Valente> rdf:type <http://www.semanticweb.org/ariana/coffee#PERSON> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Angelo_Moriondo> rdf:type <http://www.semanticweb.org/ariana/coffee#PERSON> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Italians> rdf:type <http://www.semanticweb.org/ariana/coffee#NORP> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#espresso_machines> rdf:type <http://www.semanticweb.org/ariana/coffee#PRODUCT> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Luigi_Bezzera> rdf:type <http://www.semanticweb.org/ariana/coffee#PERSON> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#one> rdf:type <http://www.semanticweb.org/ariana/coffee#CARDINAL> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Italians> rdf:type <http://www.semanticweb.org/ariana/coffee#NORP> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#espresso_machines> rdf:type <http://www.semanticweb.org/ariana/coffee#PRODUCT> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Desiderio_Pavoni> rdf:type <http://www.semanticweb.org/ariana/coffee#PERSON> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#one> rdf:type <http://www.semanticweb.org/ariana/coffee#CARDINAL> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Italians> rdf:type <http://www.semanticweb.org/ariana/coffee#NORP> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#espresso_machines> rdf:type <http://www.semanticweb.org/ariana/coffee#PRODUCT> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Achille_Gaggia> rdf:type <http://www.semanticweb.org/ariana/coffee#PERSON> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Italians> rdf:type <http://www.semanticweb.org/ariana/coffee#NORP> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#espresso_machines> rdf:type <http://www.semanticweb.org/ariana/coffee#PRODUCT> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Ernesto_Valente> rdf:type <http://www.semanticweb.org/ariana/coffee#PERSON> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Italians> rdf:type <http://www.semanticweb.org/ariana/coffee#NORP> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#espresso_machines> rdf:type <http://www.semanticweb.org/ariana/coffee#PRODUCT> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Angelo_Moriondo> rdf:type <http://www.semanticweb.org/ariana/coffee#PERSON> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Turin> rdf:type <http://www.semanticweb.org/ariana/coffee#LOC> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Angelo_Moriondo> rdf:type <http://www.semanticweb.org/ariana/coffee#PERSON> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#first> rdf:type <http://www.semanticweb.org/ariana/coffee#ORDINAL> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Luigi_Bezzera> rdf:type <http://www.semanticweb.org/ariana/coffee#PERSON> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Milan> rdf:type <http://www.semanticweb.org/ariana/coffee#LOC> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Luigi_Bezzera> rdf:type <http://www.semanticweb.org/ariana/coffee#PERSON> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Moriondo_’s_machine> rdf:type <http://www.semanticweb.org/ariana/coffee#PRODUCT> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Luigi_Bezzera> rdf:type <http://www.semanticweb.org/ariana/coffee#PERSON> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#single_-_portion_brewer> rdf:type <http://www.semanticweb.org/ariana/coffee#TOOLS> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#1902> rdf:type <http://www.semanticweb.org/ariana/coffee#DATE> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Desiderio_Pavoni> rdf:type <http://www.semanticweb.org/ariana/coffee#PERSON> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Bezzera_’s_patent> rdf:type <http://www.semanticweb.org/ariana/coffee#PRODUCT> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Desiderio_Pavoni> rdf:type <http://www.semanticweb.org/ariana/coffee#PERSON> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#producing_machines> rdf:type <http://www.semanticweb.org/ariana/coffee#EVENT> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#-_strength> rdf:type <http://www.semanticweb.org/ariana/coffee#PERSON> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#single_cups> rdf:type <http://www.semanticweb.org/ariana/coffee#TOOLS> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Achille_Gaggia> rdf:type <http://www.semanticweb.org/ariana/coffee#PERSON> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#lever_-_driven> rdf:type <http://www.semanticweb.org/ariana/coffee#TOOLS> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#nearly_30_years_later> rdf:type <http://www.semanticweb.org/ariana/coffee#DATE> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Ernesto_Valente> rdf:type <http://www.semanticweb.org/ariana/coffee#PERSON> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#E61_espresso_machine> rdf:type <http://www.semanticweb.org/ariana/coffee#TOOLS> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Ernesto_Valente> rdf:type <http://www.semanticweb.org/ariana/coffee#PERSON> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Faema> rdf:type <http://www.semanticweb.org/ariana/coffee#ORG> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#30_years> rdf:type <http://www.semanticweb.org/ariana/coffee#DATE> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#Gaggia_'s> rdf:type <http://www.semanticweb.org/ariana/coffee#PERSON> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#E61_had> rdf:type <http://www.semanticweb.org/ariana/coffee#TOOLS> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#doppio> rdf:type <http://www.semanticweb.org/ariana/coffee#BEVERAGE> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#ristretto> rdf:type <http://www.semanticweb.org/ariana/coffee#BEVERAGE> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#lungo> rdf:type <http://www.semanticweb.org/ariana/coffee#BEVERAGE> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#macchiato> rdf:type <http://www.semanticweb.org/ariana/coffee#BEVERAGE> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#latte> rdf:type <http://www.semanticweb.org/ariana/coffee#BEVERAGE> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#mocha> rdf:type <http://www.semanticweb.org/ariana/coffee#BEVERAGE> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#flat_white> rdf:type <http://www.semanticweb.org/ariana/coffee#BEVERAGE> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#americano> rdf:type <http://www.semanticweb.org/ariana/coffee#BEVERAGE> .
+                    
+                    <http://www.semanticweb.org/ariana/coffee#cortado> rdf:type <http://www.semanticweb.org/ariana/coffee#BEVERAGE> .
+                    

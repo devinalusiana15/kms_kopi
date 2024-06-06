@@ -179,7 +179,7 @@ def merge_entities(doc):
     return merged_doc
 
 def get_fuseki_data(query_string):
-    endpoint = "http://localhost:3030/Kopi/query"
+    endpoint = "http://localhost:3030/kopi/query"
 
     # send SPARQL query
     r = requests.get(endpoint, params={'query': query_string})
