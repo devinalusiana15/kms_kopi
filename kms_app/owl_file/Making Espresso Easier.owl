@@ -82,7 +82,8 @@
                     
                     <http://www.semanticweb.org/ariana/coffee#Achille_Gaggia> rdf:type <http://www.semanticweb.org/ariana/coffee#PERSON> .
                     
-                    <http://www.semanticweb.org/ariana/coffee#Ernesto_Valente> rdf:type <http://www.semanticweb.org/ariana/coffee#PERSON> .
+                    <http://www.semanticweb.org/ariana/coffee#Ernesto_
+_Valente> rdf:type <http://www.semanticweb.org/ariana/coffee#PERSON> .
                     
                     <http://www.semanticweb.org/ariana/coffee#Angelo_Moriondo> rdf:type <http://www.semanticweb.org/ariana/coffee#PERSON> .
                     
@@ -132,7 +133,7 @@
                     
                     <http://www.semanticweb.org/ariana/coffee#Luigi_Bezzera> rdf:type <http://www.semanticweb.org/ariana/coffee#PERSON> .
                     
-                    <http://www.semanticweb.org/ariana/coffee#Moriondo_’s_machine> rdf:type <http://www.semanticweb.org/ariana/coffee#PRODUCT> .
+                    <http://www.semanticweb.org/ariana/coffee#Moriondo_â€™s_machine> rdf:type <http://www.semanticweb.org/ariana/coffee#PRODUCT> .
                     
                     <http://www.semanticweb.org/ariana/coffee#Luigi_Bezzera> rdf:type <http://www.semanticweb.org/ariana/coffee#PERSON> .
                     
@@ -142,7 +143,7 @@
                     
                     <http://www.semanticweb.org/ariana/coffee#Desiderio_Pavoni> rdf:type <http://www.semanticweb.org/ariana/coffee#PERSON> .
                     
-                    <http://www.semanticweb.org/ariana/coffee#Bezzera_’s_patent> rdf:type <http://www.semanticweb.org/ariana/coffee#PRODUCT> .
+                    <http://www.semanticweb.org/ariana/coffee#Bezzera_â€™s_patent> rdf:type <http://www.semanticweb.org/ariana/coffee#PRODUCT> .
                     
                     <http://www.semanticweb.org/ariana/coffee#Desiderio_Pavoni> rdf:type <http://www.semanticweb.org/ariana/coffee#PERSON> .
                     
@@ -156,7 +157,8 @@
                     
                     <http://www.semanticweb.org/ariana/coffee#lever_-_driven> rdf:type <http://www.semanticweb.org/ariana/coffee#TOOLS> .
                     
-                    <http://www.semanticweb.org/ariana/coffee#nearly_30_years_later> rdf:type <http://www.semanticweb.org/ariana/coffee#DATE> .
+                    <http://www.semanticweb.org/ariana/coffee#nearly_30_years_
+_later> rdf:type <http://www.semanticweb.org/ariana/coffee#DATE> .
                     
                     <http://www.semanticweb.org/ariana/coffee#Ernesto_Valente> rdf:type <http://www.semanticweb.org/ariana/coffee#PERSON> .
                     

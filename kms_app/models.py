@@ -35,10 +35,15 @@ class Documents(models.Model):
     
 class Terms(models.Model):
     term_id = models.AutoField(primary_key=True)  # ID unik untuk setiap term
-    term = models.CharField(max_length=255)  # Term atau kata kunci yang muncul dalam dokumen
+    term = models.CharField(max_length=255,unique=True)  # Term atau kata kunci yang muncul dalam dokumen
 
     def __str__(self):
         return self.term
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['term']),  # Menambahkan indeks pada kolom term
+        ]
     
 class DocDetails(models.Model):
     docdetail_id = models.AutoField(primary_key=True)  # ID unik untuk setiap dokumen
@@ -51,11 +56,17 @@ class DocDetails(models.Model):
 
 class PostingLists(models.Model):
     postlist_id = models.AutoField(primary_key=True)  # ID unik untuk setiap entri dalam posting list
-    term = models.ForeignKey(Terms, on_delete=models.CASCADE)  # ID term yang merujuk ke Tabel Term
+    term = models.ForeignKey(Terms, on_delete=models.CASCADE,to_field='term', db_column='term')  # ID term yang merujuk ke Tabel Term
     docdetail = models.ForeignKey(DocDetails, on_delete=models.CASCADE)  # Frekuensi kemunculan term dalam dokumen tertentu
 
     def __str__(self):
         return f"{self.term} - {self.docdetail}"
+    
+    class Meta:
+        indexes = [
+            models.Index(fields=['term']),  # Menambahkan indeks pada kolom term
+            models.Index(fields=['docdetail']),
+        ]
     
 class Refinements(models.Model):
     refinement_id = models.AutoField(primary_key=True)
@@ -64,18 +75,29 @@ class Refinements(models.Model):
 
 class TermLemmas(models.Model):
     termlemma_id = models.AutoField(primary_key=True)  # ID unik untuk setiap term
-    termlemma = models.CharField(max_length=255)  # Term atau kata kunci yang muncul dalam dokumen
+    termlemma = models.CharField(max_length=255, unique=True)  # Term atau kata kunci yang muncul dalam dokumen
 
     def __str__(self):
         return self.termlemma
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['termlemma']),  # Menambahkan indeks pada kolom termlemma
+        ]
     
 class PostingListLemmas(models.Model):
     postlistlemma_id = models.AutoField(primary_key=True)  # ID unik untuk setiap entri dalam posting list
-    termlemma = models.ForeignKey(TermLemmas, on_delete=models.CASCADE)  # ID term yang merujuk ke Tabel Term
+    termlemma = models.ForeignKey(TermLemmas, on_delete=models.CASCADE, to_field='termlemma', db_column='termlemma')  # ID term yang merujuk ke Tabel Term
     docdetail = models.ForeignKey(DocDetails, on_delete=models.CASCADE)  # Frekuensi kemunculan term dalam dokumen tertentu
 
     def __str__(self):
         return f"{self.termlemma} - {self.docdetail}"
+    
+    class Meta:
+        indexes = [
+            models.Index(fields=['termlemma']),  # Menambahkan indeks pada kolom termlemma
+            models.Index(fields=['docdetail']),
+        ]
     
 # Model NER Default
 nlp_default = spacy.load("en_core_web_sm")

@@ -9,7 +9,7 @@ from nltk.tag import pos_tag
 
 import time
 from django.utils.safestring import mark_safe
-
+from django.db.models import Prefetch
 from django.conf import settings
 from django.contrib import messages
 from django.db import transaction
@@ -74,19 +74,16 @@ def uploadKnowledge(request):
                 else:
                     new_document = Documents(document_name=uploaded_file.name, document_path='kms_app/uploaded_files/'+uploaded_file.name)
                     new_document.save()
-                    
-                    handle_uploaded_file(uploaded_file)                    
+
+                    handle_uploaded_file(uploaded_file)
                     create_and_save_inverted_index(new_document)
 
-                    extract_text = extract_text_from_pdf(new_document.document_path)
-                    text = extract_text.replace('\n', ' ')
+                    text = extract_text_from_pdf(new_document.document_path)
                     document = [merge_entities(nlp_custom(sentence)) for sentence in text.split('.') if sentence.strip()]
-                    
-                    print(document)
+
                     ontology = generate_ontology(document)
                     save_ontology(ontology, new_document.document_name.replace('.pdf', '.owl'))
 
-                    
                     messages.success(request, 'New knowledge is added successfully')
                     return render(request, 'pages/uploaders/uploadersAddKnowledge.html')
         else:
@@ -283,7 +280,6 @@ def get_answer_new(question):
     extra_info = get_extra_information(answer)
     return answer, search_result_verbs, extra_info
 
-
 def home(request):
     if request.method == 'POST':
         start_time = time.time()  
@@ -338,43 +334,26 @@ def extract_text_from_pdf(context_path):
         print("Error:", e)
     return text
 
-@transaction.atomic
 def create_and_save_inverted_index(document):
     text = extract_text_from_pdf(document.document_path)
     sentences = text.split('.')
-    inverted_index = defaultdict(list)
-    inverted_index_lemma = defaultdict(list)
     stop_words = set(stopwords.words('english'))
 
-    for sentence_index, sentence in enumerate(sentences, start=1):
-        doc_details = DocDetails.objects.create(document=document, docdetail=sentence, position=sentence_index)
-        tokens = sentence.lower().split()
-        lemmatized_tokens = lemmatization(sentence)
+    with transaction.atomic():
+        for sentence_index, sentence in enumerate(sentences, start=1):
+            doc_details = DocDetails.objects.create(document=document, docdetail=sentence, position=sentence_index)
+            tokens = [token.lower() for token in sentence.split() if token.lower() not in stop_words]
+            lemmatized_tokens = lemmatization(sentence)
 
-        for token in tokens:
-            if token in stop_words:
-                continue
-            term, created = Terms.objects.get_or_create(term=token)
-            PostingLists.objects.create(term=term, docdetail=doc_details)
-            inverted_index[token].append((term.term_id, doc_details.docdetail_id))
-        
-        for lemma in lemmatized_tokens:
-            if lemma in stop_words:
-                continue
-            term_lemma, lemma_created = TermLemmas.objects.get_or_create(termlemma=lemma)
-            PostingListLemmas.objects.create(termlemma=term_lemma, docdetail=doc_details)
-            inverted_index_lemma[lemma].append((term_lemma.termlemma_id, doc_details.docdetail_id))
+            for token in tokens:
+                term, created = Terms.objects.get_or_create(term=token)
+                PostingLists.objects.create(term=term, docdetail=doc_details)
 
-    for term, postings in inverted_index.items():
-        term_obj = Terms.objects.get(term=term)
-        for posting in postings:
-            PostingLists.objects.create(term_id=posting[0], docdetail_id=posting[1])
-    
-    for lemma, postings in inverted_index_lemma.items():
-        term_lemma_obj = TermLemmas.objects.get(termlemma=lemma)
-        for posting in postings:
-            PostingListLemmas.objects.create(termlemma_id=posting[0], docdetail_id=posting[1])
-
+            for lemma in lemmatized_tokens:
+                if lemma not in stop_words:
+                    term_lemma, lemma_created = TermLemmas.objects.get_or_create(termlemma=lemma)
+                    PostingListLemmas.objects.create(termlemma=term_lemma, docdetail=doc_details)
+                    
 
 def articles(request):
     documents = Documents.objects.all()
