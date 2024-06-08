@@ -17,6 +17,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.safestring import mark_safe
+from rdflib import Graph, URIRef, Namespace, Literal
 
 from .forms import LoginForm, UploadFileForm
 from .models import (
@@ -458,8 +459,11 @@ def save_ontology(ontology, file_name):
     with open(file_path, "w") as output_file:
         output_file.write(ontology)
 
+
 def get_extra_information(answer):
-    response = ""
+    COFFEE = Namespace("http://www.semanticweb.org/ariana/coffee#")
+    g = Graph()
+    g.bind("coffee", COFFEE)
 
     query = f"""
     PREFIX coffee: <http://www.semanticweb.org/ariana/coffee#>
@@ -473,27 +477,34 @@ def get_extra_information(answer):
       }}
     }}
     """
+    results = get_fuseki_data(query)
 
-    try:
-        results = get_fuseki_data(query)
-    except Exception as e:
-        print(f"Error executing query: {e}")
-        return "Error executing query"
-
+    text_response = ""
     if results:
         for row in results:
             predicate_name = row.get('p', '').split('#')[-1].replace("_", " ") if row.get('p') else None
             object_name = row.get('o', '').split('#')[-1].replace("_", " ") if row.get('o') else None
             subject_name = row.get('s', '').split('#')[-1].replace("_", " ") if row.get('s') else None
 
-            if object_name:
-                response += f"{answer} {predicate_name} {object_name}. "
-            if subject_name:
-                response += f"{subject_name} {predicate_name} {answer}. "
+            if predicate_name and object_name:
+                g.add((COFFEE[answer], URIRef(row['p']), URIRef(row['o'])))
+                text_response += f"{answer} {predicate_name} {object_name}. "
+            if predicate_name and subject_name:
+                g.add((URIRef(row['s']), URIRef(row['p']), COFFEE[answer]))
+                text_response += f"{subject_name} {predicate_name} {answer}. "
 
-        return response
+        rdf_output = g.serialize(format='turtle')
     else:
-        return None
+        rdf_output = None
+    
+    extra_info = {
+        'answer': answer,
+        'text_response': text_response,
+        'rdf_output': rdf_output, 
+    }
+
+    return extra_info
+
 
 
 def get_annotation(question,annotation):
