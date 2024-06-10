@@ -3,8 +3,6 @@ from datetime import datetime
 from collections import defaultdict
 
 import fitz
-from nltk.tokenize import word_tokenize
-from nltk.corpus import stopwords
 from nltk.tag import pos_tag
 
 import time
@@ -93,23 +91,29 @@ def uploadKnowledge(request):
         form = UploadFileForm()
     return render(request, 'pages/uploaders/uploadersAddKnowledge.html', {'form': form})
 
+def remove_stopwords(doc):
+    return ' '.join([token.text for token in doc if not token.is_stop])
+
 def pos_tagging_and_extract_verbs(text):
-    tokens = word_tokenize(text)
-    stop_words = set(stopwords.words('english'))
+    doc = nlp_default(text)
+    tokens = [token.text for token in doc]
+    stop_words = nlp_default.Defaults.stop_words
     pos_tags = pos_tag(tokens)
     verbs = [word for word, pos in pos_tags if pos.startswith('VB') and word.lower() not in stop_words]
     return verbs
 
 def pos_tagging_and_extract_nouns(text):
     not_include = "coffee"
-    tokens = word_tokenize(text)
+    doc = nlp_default(text)
+    tokens = [token.text for token in doc]
     pos_tags = pos_tag(tokens)
     nouns = [word for word, pos in pos_tags if pos.startswith('NN') and word != not_include]
     return nouns
 
 def pos_tagging_and_extract_nouns_ontology(text):
     not_include = ["coffee", "definition"]
-    tokens = word_tokenize(text)
+    doc = nlp_default(text)
+    tokens = [token.text for token in doc]
     pos_tags = pos_tag(tokens)
     nouns = [word for word, pos in pos_tags if pos.startswith('NN')]
 
@@ -338,7 +342,7 @@ def extract_text_from_pdf(context_path):
 def create_and_save_inverted_index(document):
     text = extract_text_from_pdf(document.document_path)
     sentences = text.split('.')
-    stop_words = set(stopwords.words('english'))
+    stop_words = nlp_default.Defaults.stop_words
 
     with transaction.atomic():
         for sentence_index, sentence in enumerate(sentences, start=1):
@@ -393,6 +397,13 @@ def detailArticle(request, document_id):
 """ Ontologi """
 
 def generate_ontology(doc_ontology):
+    cleaned_sentences = []
+    for sent in doc_ontology:
+        cleaned_sentences.append(remove_stopwords(sent))
+
+    clean_ents=[]
+    for sent in cleaned_sentences:
+        clean_ents.append(merge_entities(nlp_custom(sent)))
     # Proses pembuatan ontologi
     ontology = """@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
     @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -411,7 +422,7 @@ def generate_ontology(doc_ontology):
     object_properties = set()
     print(f'ini doc_ontology:{doc_ontology}')
 
-    for sent in doc_ontology:
+    for sent in clean_ents:
         prev_entity = None
         print(f'ini entitas: {sent.ents}')
         for ent in sent.ents:            
@@ -442,7 +453,7 @@ def generate_ontology(doc_ontology):
                     prev_entity = {"text": ent.text, "type": ent.label_}
                     classes.add(ent.label_)
 
-    for sent in doc_ontology:
+    for sent in clean_ents:
         for ent in sent.ents:
             if ent.label_ != '':
                 individual_name = ent.text.replace(" ", "_")
