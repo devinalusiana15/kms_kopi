@@ -282,7 +282,7 @@ def get_answer_new(question):
 
     context = {'response_text': response_text, 'related_articles': relevant_sentences_verbs}
     print(context)
-    extra_info = get_extra_information(answer)
+    extra_info = get_extra_information(answer.replace(" ", "_"))
     return answer, search_result_verbs, extra_info
 
 def home(request):
@@ -404,6 +404,7 @@ def generate_ontology(doc_ontology):
     clean_ents=[]
     for sent in cleaned_sentences:
         clean_ents.append(merge_entities(nlp_custom(sent)))
+
     # Proses pembuatan ontologi
     ontology = """@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
     @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -420,38 +421,47 @@ def generate_ontology(doc_ontology):
 
     classes = set()
     object_properties = set()
-    print(f'ini doc_ontology:{doc_ontology}')
+    data_properties = set()
 
     for sent in clean_ents:
         prev_entity = None
-        print(f'ini entitas: {sent.ents}')
-        for ent in sent.ents:            
+        for ent in sent.ents:
             if ent.label_ != '':
                 if ent.label_ == 'VERB':
                     if prev_entity:
-                        # Menambahkan range dan domain dengan melihat entitas sebelum dan sesudah entitas VERB
-                        object_properties.add(ent.text)
-                        ontology += f"""
-                        <http://www.semanticweb.org/ariana/coffee#{ent.text.replace(" ", "_")}> rdfs:domain <http://www.semanticweb.org/ariana/coffee#{prev_entity["type"]}> .
-                        """
                         # Next entity
                         next_entity = None
                         for next_ent in sent.ents:
-                            if next_ent.start > ent.end:
+                            if next_ent.start > ent.start:
                                 next_entity = next_ent
                                 break
                         if next_entity:
+                            if next_entity.label_ in ["DATE", "TIME"]:
+                                obj_prop = f"{ent.text}_on"
+                            elif next_entity.label_ in ["LOC", "GPE"]:
+                                obj_prop = f"{ent.text}_in"
+                            elif next_entity.label_ in ["NORP", "PERSON"]:
+                                obj_prop = f"{ent.text}_by"
+                            else:
+                                obj_prop = f"{ent.text}"
+                        
+                            object_properties.add(obj_prop)
+
+                            # Penentuan Domain
                             ontology += f"""
-                            <http://www.semanticweb.org/ariana/coffee#{ent.text.replace(" ", "_")}> rdfs:range <http://www.semanticweb.org/ariana/coffee#{next_entity.label_}> .
+                            <http://www.semanticweb.org/ariana/coffee#{obj_prop}> rdfs:domain <http://www.semanticweb.org/ariana/coffee#{prev_entity.label_}> .
+                            """
+                            # Penentuan Range
+                            ontology += f"""
+                                <http://www.semanticweb.org/ariana/coffee#{obj_prop}> rdfs:range <http://www.semanticweb.org/ariana/coffee#{next_entity.label_}> .
                             """
                             # Individual - Object Property - Individual
                             ontology += f"""
-                            <http://www.semanticweb.org/ariana/coffee#{prev_entity["text"].replace(" ", "_")}> coffee:{ent.text.replace(" ", "_")} <http://www.semanticweb.org/ariana/coffee#{next_entity.text.replace(" ", "_")}> .
+                                <http://www.semanticweb.org/ariana/coffee#{prev_entity.text.replace(" ", "_")}> coffee:{obj_prop} <http://www.semanticweb.org/ariana/coffee#{next_entity.text.replace(" ", "_")}> .
                             """
                     prev_entity = None  # Reset prev_entity
                 else:
-                    prev_entity = {"text": ent.text, "type": ent.label_}
-                    classes.add(ent.label_)
+                    prev_entity = ent
 
     for sent in clean_ents:
         for ent in sent.ents:
@@ -509,7 +519,7 @@ def get_extra_information(answer):
         rdf_output = None
     
     extra_info = {
-        'answer': answer,
+        'answer': answer.replace("_", " "),
         'text_response': text_response,
         'rdf_output': rdf_output, 
     }
