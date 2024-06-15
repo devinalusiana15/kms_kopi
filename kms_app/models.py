@@ -11,11 +11,11 @@ from django.db import models
 from rdflib import Graph, Namespace, Literal, URIRef
 import requests
 
-nltk.download('punkt')
-nltk.download('averaged_perceptron_tagger')
-nltk.download('maxent_ne_chunker')
-nltk.download('words')
-nltk.download('stopwords')
+# nltk.download('punkt')
+# nltk.download('averaged_perceptron_tagger')
+# nltk.download('maxent_ne_chunker')
+# nltk.download('words')
+# nltk.download('stopwords')
 
 class Uploader(models.Model):
     uploader_id = models.AutoField(primary_key=True)
@@ -34,8 +34,8 @@ class Documents(models.Model):
         return self.document_name
     
 class Terms(models.Model):
-    term_id = models.AutoField(primary_key=True)  # ID unik untuk setiap term
-    term = models.CharField(max_length=255,unique=True)  # Term atau kata kunci yang muncul dalam dokumen
+    term = models.CharField(max_length=255,unique=True, primary_key=True)  # Term atau kata kunci yang muncul dalam dokumen
+    lemma = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
         return self.term
@@ -72,32 +72,6 @@ class Refinements(models.Model):
     refinement_id = models.AutoField(primary_key=True)
     question = models.CharField(max_length=255)
     answer = models.CharField(max_length=255)
-
-class TermLemmas(models.Model):
-    termlemma_id = models.AutoField(primary_key=True)  # ID unik untuk setiap term
-    termlemma = models.CharField(max_length=255, unique=True)  # Term atau kata kunci yang muncul dalam dokumen
-
-    def __str__(self):
-        return self.termlemma
-
-    class Meta:
-        indexes = [
-            models.Index(fields=['termlemma']),  # Menambahkan indeks pada kolom termlemma
-        ]
-    
-class PostingListLemmas(models.Model):
-    postlistlemma_id = models.AutoField(primary_key=True)  # ID unik untuk setiap entri dalam posting list
-    termlemma = models.ForeignKey(TermLemmas, on_delete=models.CASCADE, to_field='termlemma', db_column='termlemma')  # ID term yang merujuk ke Tabel Term
-    docdetail = models.ForeignKey(DocDetails, on_delete=models.CASCADE)  # Frekuensi kemunculan term dalam dokumen tertentu
-
-    def __str__(self):
-        return f"{self.termlemma} - {self.docdetail}"
-    
-    class Meta:
-        indexes = [
-            models.Index(fields=['termlemma']),  # Menambahkan indeks pada kolom termlemma
-            models.Index(fields=['docdetail']),
-        ]
     
 # Model NER Default
 nlp_default = spacy.load("en_core_web_sm")
