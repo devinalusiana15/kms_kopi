@@ -14,5 +14,5 @@ urlpatterns = [
     path('uploadKnowledge/', views.addKnowledge, name='addKnowledge'),
     path('uploaders/uploadKnowledge/', views.uploadKnowledge, name='uploadKnowledge'),
     path('login/', views.login, name="login"),
-    path('logout/', views.logout, name="logout")
+    path('logout/', views.logout, name="logout"),
 ]

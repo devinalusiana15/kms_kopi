@@ -16,6 +16,7 @@ from django.dispatch import receiver
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.safestring import mark_safe
 from rdflib import Graph, URIRef, Namespace, Literal
+from owlready2 import onto_path, get_ontology, sync_reasoner
 
 from .forms import LoginForm, UploadFileForm
 from .models import (
@@ -81,7 +82,7 @@ def uploadKnowledge(request):
                     document = [merge_entities(nlp_custom(sentence)) for sentence in text.split('.') if sentence.strip()]
 
                     ontology = generate_ontology(document)
-                    save_ontology(ontology, new_document.document_name.replace('.pdf', '.owl'))
+                    save_ontology(ontology)
 
                     messages.success(request, 'New knowledge is added successfully')
                     return render(request, 'pages/uploaders/uploadersAddKnowledge.html')
@@ -129,7 +130,9 @@ def find_answer_type(question):
 
     format = ['what', 'when', 'where', 'who', 'why', 'how']
 
-    if question[0] in format:
+    if question[1] == "are" and question[0] in format:
+          return ['axiom']
+    elif question[0] in format:
       if 'where' in question:
           return ['LOC', 'GPE', 'CONTINENT', 'LOCATION']
       elif 'who' in question:
@@ -291,19 +294,26 @@ def home(request):
         search_query = request.POST.get('question')
         print({"Pertanyaan: ", search_query})
         answer_types = find_answer_type(search_query)
+        print(answer_types)
         annotation_types = ['definition', 'direction']
-        if not any(answer_type in annotation_types for answer_type in answer_types):
+        if 'axiom' in answer_types:
+            keyword_noun = pos_tagging_and_extract_nouns(search_query)
+            print(keyword_noun)
+            answer = get_instances(keyword_noun)
+            context = {
+                'question': search_query,
+                'answer': mark_safe(answer),
+            }
+        elif not any(answer_type in annotation_types for answer_type in answer_types):
             answer_context, related_articles, extra_info = get_answer_new(search_query)
-            print('MASUK ATAS')
             context = {
                 'question': search_query,
                 'answer': answer_context,
                 'related_articles': related_articles,
-                'extra_info': extra_info
+                'extra_info': extra_info,
             }
         else:
             answer = get_annotation(search_query, answer_types)
-            print('MASUK BAWAH')
             context = {
                 'question': search_query,
                 'answer': mark_safe(answer),
@@ -315,8 +325,7 @@ def home(request):
         response_time = round(response_time, 1)
         
         context['response_time'] = response_time
-        
-        print(f'ini context related article: {context}')
+
         return render(request, 'Home.html', context)
     else:
         return render(request, 'Home.html', {'related_articles': []})
@@ -406,18 +415,7 @@ def generate_ontology(doc_ontology):
         clean_ents.append(merge_entities(nlp_custom(sent)))
 
     # Proses pembuatan ontologi
-    ontology = """@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-    @prefix owl: <http://www.w3.org/2002/07/owl#> .
-    @prefix coffee: <http://www.semanticweb.org/ariana/coffee#> .
-
-    # Ontology Header
-    <http://www.semanticweb.org/ariana/coffee#>
-        rdf:type owl:Ontology ;
-        owl:versionIRI <http://www.semanticweb.org/ariana/coffee#1.0> .
-
-    # Classes
-    """
+    ontology = ""
 
     classes = set()
     object_properties = set()
@@ -474,10 +472,10 @@ def generate_ontology(doc_ontology):
                     """
     return ontology
 
-def save_ontology(ontology, file_name):
+def save_ontology(ontology):
     owl_directory = os.path.join(settings.BASE_DIR, 'kms_app/owl_file')
-    file_path = os.path.join(owl_directory, file_name)
-    with open(file_path, "w") as output_file:
+    file_path = os.path.join(owl_directory, "Kopi.owl")
+    with open(file_path, "a") as output_file:
         output_file.write(ontology)
 
 
@@ -558,3 +556,89 @@ def get_annotation(question,annotation):
         response = "Tidak ada jawaban"
 
     return response
+
+def get_answer_rdf(answer, key_noun):
+    print(f'INI KEY NOUN: {key_noun}')
+    COFFEE = Namespace("http://www.semanticweb.org/ariana/coffee#")
+    g = Graph()
+    g.bind("coffee", COFFEE)
+
+    query = f"""
+    PREFIX coffee: <http://www.semanticweb.org/ariana/coffee#>
+    SELECT ?p ?o ?s WHERE {{
+      {{ coffee:{answer} ?p coffee:{key_noun}.
+        FILTER (!CONTAINS(LCASE(STR(?p)), "type"))
+      }}
+      UNION
+      {{ coffee:{key_noun} ?p coffee:{answer}.
+        FILTER (!CONTAINS(LCASE(STR(?p)), "type"))
+      }}
+    }}
+    """
+    results = get_fuseki_data(query)
+
+    if results:
+        for row in results:
+            predicate = row.get('p')
+            object_ = row.get('o')
+            subject = row.get('s')
+
+            if predicate and object_:
+                g.add((COFFEE[answer], URIRef(predicate), URIRef(object_)))
+            if predicate and subject:
+                g.add((URIRef(subject), URIRef(predicate), COFFEE[answer]))
+
+        rdf_output = g.serialize(format='turtle')
+    else:
+        rdf_output = None
+
+    return rdf_output
+
+
+def get_instances(noun):
+    onto_path.append(os.path.join(settings.BASE_DIR, 'kms_app/owl_file'))
+    onto = get_ontology("Kopi.rdf").load()
+
+    # Mengaktifkan reasoner
+    sync_reasoner()
+
+    # Noun sebagai class yang dicari
+    keyword_noun = "".join(noun)
+
+    # Mencari kelas berdasarkan kata kunci
+    cls = onto[keyword_noun]
+    if not cls:
+        return "Class not found"
+
+    instances = list(cls.instances())
+
+    response = f"<br>These are the {keyword_noun}:"
+
+    if instances:
+        # Mendapatkan properti yang sama pada setiap instance
+        common_properties = None
+        for instance in instances:
+            instance_properties = set()
+            for prop in instance.get_properties():
+                instance_properties.add(prop.name)
+
+            if common_properties is None:
+                common_properties = instance_properties
+            else:
+                common_properties = common_properties.intersection(instance_properties)
+
+        # Menampilkan instance - common_properties - value
+        if common_properties:
+            for prop_name in common_properties:
+                for instance in instances:
+                    for prop in instance.get_properties():
+                        if prop.name == prop_name:
+                            for value in prop[instance]:
+                                response += f"<br>- {instance.name.replace('_', ' ')} {prop.name} {value.name.replace('_', ' ')} "
+    else:
+        response += "No instances found."
+
+    return response
+
+
+
