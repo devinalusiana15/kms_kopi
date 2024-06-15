@@ -277,7 +277,6 @@ def home(request):
                 'extra_info': None
             }
         end_time = time.time() 
-        # response_time = (end_time - start_time) * 1000
         response_time = end_time - start_time
         response_time = round(response_time, 1)
         
