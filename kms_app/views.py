@@ -30,8 +30,6 @@ from .models import (
     PostingLists,
     DocDetails,
     Refinements,
-    TermLemmas,
-    PostingListLemmas
 )
 
 def login(request):
@@ -57,10 +55,10 @@ def logout(request):
     del request.session['uploader_id']
     return redirect('login')
 
-def addKnowledge(request):
+def add_knowledge(request):
     return render(request, 'pages/seekers/addKnowledge.html')
 
-def uploadKnowledge(request):
+def upload_knowledge(request):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
@@ -128,24 +126,24 @@ def find_answer_type(question):
 
     question = question.lower().split()
 
-    format = ['what', 'when', 'where', 'who', 'why', 'how']
+    question_keywords = ['what', 'when', 'where', 'who', 'why', 'how']
 
-    if question[1] == "are" and question[0] in format:
-          return ['axiom']
-    elif question[0] in format:
-      if 'where' in question:
-          return ['LOC', 'GPE', 'CONTINENT', 'LOCATION']
-      elif 'who' in question:
-          return ['NORP', 'PERSON','NATIONALITY']
-      elif 'when' in question:
-          return ['DATE', 'TIME']
-      elif 'what' in question:
-          if 'definition' in question:
-            return ['definition']
-          else:
-            return ['PERCENT', 'PRODUCT', 'VARIETY', 'METHODS', 'BEVERAGE', 'QUANTITY', 'LAW']
-      elif 'how' in question:
-          return ['direction']
+    if question[1] == "are" and question[0] in question_keywords:
+        return ['axiom']
+    elif question[0] in question_keywords:
+        if 'where' in question:
+            return ['LOC', 'GPE', 'CONTINENT', 'LOCATION']
+        elif 'who' in question:
+            return ['NORP', 'PERSON','NATIONALITY']
+        elif 'when' in question:
+            return ['DATE', 'TIME']
+        elif 'what' in question:
+            if 'definition' in question:
+                return ['definition']
+            else:
+                return ['PERCENT', 'PRODUCT', 'VARIETY', 'METHODS', 'BEVERAGE', 'QUANTITY']
+        elif 'how' in question:
+            return ['direction']
     else:
         return "Pertanyaan tidak valid"
 
@@ -154,7 +152,7 @@ def find_answer(answer_types, entities):
         'LOC': ['LOC','GPE', 'CONTINENT'],
         'PERSON': ['NORP', 'PERSON','NATIONALITY', 'JOB'],
         'DATE': ['DATE', 'TIME'],
-        'PRODUCT': ['PRODUCT', 'VARIETY', 'METHODS', 'BEVERAGE', 'QUANTITY', 'DISTANCE', 'TEMPERATURE', 'LAW'],
+        'PRODUCT': ['PRODUCT', 'VARIETY', 'METHODS', 'BEVERAGE', 'QUANTITY', 'DISTANCE', 'TEMPERATURE'],
     }
     for ent_text, ent_label in entities:
         for answer_type, labels in answer_types_mapping.items():
@@ -172,14 +170,14 @@ def retrieve_documents(keywords=None, nouns=None):
     relevant_sentences = []
     
     if keywords is None and nouns is None:
-        return relevant_documents, relevant_sentences  # Mengembalikan dua nilai
-    
+        return relevant_documents, relevant_sentences
+
     terms = Terms.objects.none()
     if keywords is not None:
-        terms = Terms.objects.filter(term__in=keywords)
+        terms = Terms.objects.filter(term__in=keywords) | Terms.objects.filter(lemma__in=keywords)
     if nouns is not None:
-        terms = terms | Terms.objects.filter(term__in=nouns)
-    
+        terms = terms | Terms.objects.filter(term__in=nouns) | Terms.objects.filter(lemma__in=nouns)
+
     if terms.exists():
         posting_entries = PostingLists.objects.filter(term__in=terms)
         for entry in posting_entries:
@@ -187,38 +185,6 @@ def retrieve_documents(keywords=None, nouns=None):
             document_content = DocDetails.objects.filter(docdetail_id=doc_detail.docdetail_id).values_list('docdetail', flat=True).first()
             relevant_sentence = document_content
             
-            # Kalau di luar for nanti related articlenya bakal cuma satu
-            relevant_documents.append({
-                'detail': entry.docdetail.docdetail_id,
-                'document_name': entry.docdetail.document_id,
-                'context': document_content,
-                'relevant_sentence': relevant_sentence,
-                'url': f'/document/{doc_detail.document_id}'
-            })
-        relevant_sentences.append(relevant_sentence)
-    
-    return relevant_documents, relevant_sentences
-
-def retrieve_documents_lemmas(keywords=None, nouns=None):
-    relevant_documents = []
-    relevant_sentences = []
-
-    if keywords is None and nouns is None:
-        return relevant_documents, relevant_sentences
-
-    terms_lemma = TermLemmas.objects.none()
-    if keywords is not None:
-        terms_lemma = TermLemmas.objects.filter(termlemma__in=keywords)
-    if nouns is not None:
-        terms_lemma = terms_lemma | TermLemmas.objects.filter(termlemma__in=nouns)
-
-    if terms_lemma.exists():
-        posting_entries = PostingListLemmas.objects.filter(termlemma__in=terms_lemma)
-        for entry in posting_entries:
-            doc_detail = entry.docdetail
-            document_content = DocDetails.objects.filter(docdetail_id=doc_detail.docdetail_id).values_list('docdetail', flat=True).first()
-            relevant_sentence = document_content
-
             relevant_documents.append({
                 'detail': entry.docdetail.docdetail_id,
                 'document_name': entry.docdetail.document_id,
@@ -227,39 +193,69 @@ def retrieve_documents_lemmas(keywords=None, nouns=None):
                 'url': f'/document/{doc_detail.document_id}'
             })
             relevant_sentences.append(relevant_sentence)
-
+    
     return relevant_documents, relevant_sentences
 
-def get_answer_new(question):
+def get_rdf_answer(predicate):
+    COFFEE = Namespace("http://www.semanticweb.org/ariana/coffee#")
+    g = Graph()
+    g.bind("coffee", COFFEE)
+    
+    if isinstance(predicate, list) and len(predicate) == 1:
+        predicate = predicate[0]
+
+    query = f"""
+    PREFIX coffee: <http://www.semanticweb.org/ariana/coffee#>
+    SELECT ?s ?o WHERE {{
+      ?s coffee:{predicate} ?o .
+    }}
+    """
+    results = get_fuseki_data(query)
+
+    if results:
+        for row in results:
+            object_name = row.get('o', '').split('#')[-1].replace("_", " ") if row.get('o') else None
+            subject_name = row.get('s', '').split('#')[-1].replace("_", " ") if row.get('s') else None
+            
+            if subject_name and object_name:
+                g.add((URIRef(row['s']), COFFEE[predicate], URIRef(row['o'])))
+    else:
+        return None
+
+    rdf_output = g.serialize(format='turtle')
+
+    return rdf_output
+
+def get_answer(question):
     keywords_verbs = pos_tagging_and_extract_verbs(question)
     keywords_nouns = pos_tagging_and_extract_nouns(question)
     response_text = f"Pertanyaan asli: {question}<br>Keywords (Verbs): {keywords_verbs}<br>Keywords (Nouns): {keywords_nouns}<br>"
     
     answer = "Tidak ada informasi yang ditemukan."
     
-    search_result_verbs, relevant_sentences_verbs = retrieve_documents(keywords=keywords_verbs)
+    search_result, relevant_sentences = retrieve_documents(keywords=keywords_verbs)
     
-    if not search_result_verbs:
+    if not search_result:
         search_result_nouns, relevant_sentences_nouns = retrieve_documents(nouns=keywords_nouns)
-        search_result_verbs.extend(search_result_nouns)
-        relevant_sentences_verbs.extend(relevant_sentences_nouns)
+        search_result.extend(search_result_nouns)
+        relevant_sentences.extend(relevant_sentences_nouns)
     
-    if not search_result_verbs:
+    if not search_result:
         lemmatized_verbs = lemmatization(' '.join(keywords_verbs))
         lemmatized_nouns = lemmatization(' '.join(keywords_nouns))
 
-        search_result_lemmas_verbs, relevant_sentences_lemmas_verbs = retrieve_documents_lemmas(keywords=lemmatized_verbs)
+        search_result_lemmas, relevant_sentences_lemmas = retrieve_documents(keywords=lemmatized_verbs)
+        
+        if not search_result_lemmas:
+            search_result_lemmas_nouns, relevant_sentences_lemmas_nouns = retrieve_documents(nouns=lemmatized_nouns)
+            search_result_lemmas.extend(search_result_lemmas_nouns)
+            relevant_sentences_lemmas.extend(relevant_sentences_lemmas_nouns)
 
-        if not search_result_lemmas_verbs:
-            search_result_lemmas_nouns, relevant_sentences_lemmas_nouns = retrieve_documents_lemmas(nouns=lemmatized_nouns)
-            search_result_lemmas_verbs.extend(search_result_lemmas_nouns)
-            relevant_sentences_lemmas_verbs.extend(relevant_sentences_lemmas_nouns)
+        search_result.extend(search_result_lemmas)
+        relevant_sentences.extend(relevant_sentences_lemmas)
 
-        search_result_verbs.extend(search_result_lemmas_verbs)
-        relevant_sentences_verbs.extend(relevant_sentences_lemmas_verbs)
-
-    if search_result_verbs:
-        for i, result in enumerate(search_result_verbs):
+    if search_result:
+        for i, result in enumerate(search_result):
             doc_content = result['relevant_sentence']
             doc_entities = merge_entities(nlp_default(doc_content)).ents
             print(f"Entities in document {result['document_name']}: {doc_entities}")
@@ -282,11 +278,15 @@ def get_answer_new(question):
         response_text += "<br>Dokumen yang relevan tidak ditemukan."
         refine = Refinements(question=question, answer=answer)
         refine.save()
+    
+    
+    predicate = keywords_verbs
+    rdf_output = get_rdf_answer(predicate)
 
-    context = {'response_text': response_text, 'related_articles': relevant_sentences_verbs}
+    context = {'response_text': response_text, 'related_articles': relevant_sentences}
     print(context)
     extra_info = get_extra_information(answer.replace(" ", "_"))
-    return answer, search_result_verbs, extra_info
+    return answer, search_result, extra_info, rdf_output
 
 def home(request):
     if request.method == 'POST':
@@ -305,12 +305,13 @@ def home(request):
                 'answer': mark_safe(answer),
             }
         elif not any(answer_type in annotation_types for answer_type in answer_types):
-            answer_context, related_articles, extra_info = get_answer_new(search_query)
+            answer_context, related_articles, extra_info, rdf_output = get_answer(search_query)
             context = {
                 'question': search_query,
                 'answer': answer_context,
                 'related_articles': related_articles,
                 'extra_info': extra_info,
+                'rdf_output': rdf_output
             }
         else:
             answer = get_annotation(search_query, answer_types)
@@ -318,7 +319,8 @@ def home(request):
                 'question': search_query,
                 'answer': mark_safe(answer),
                 'related_articles': None,
-                'extra_info': None
+                'extra_info': None,
+                'rdf_output': None
             }
         end_time = time.time()
         response_time = end_time - start_time
@@ -351,23 +353,23 @@ def extract_text_from_pdf(context_path):
 def create_and_save_inverted_index(document):
     text = extract_text_from_pdf(document.document_path)
     sentences = text.split('.')
-    stop_words = nlp_default.Defaults.stop_words
-
+    
     with transaction.atomic():
         for sentence_index, sentence in enumerate(sentences, start=1):
             doc_details = DocDetails.objects.create(document=document, docdetail=sentence, position=sentence_index)
-            tokens = [token.lower() for token in sentence.split() if token.lower() not in stop_words]
-            lemmatized_tokens = lemmatization(sentence)
+
+            sentence_doc = nlp_default(sentence)
+            tokens = [token.text.lower() for token in sentence_doc if not token.is_stop and not token.is_punct]
+            lemmatized_tokens = {token.text.lower(): token.lemma_ for token in sentence_doc if not token.is_stop and not token.is_punct}
 
             for token in tokens:
+                lemma = lemmatized_tokens.get(token)
                 term, created = Terms.objects.get_or_create(term=token)
+                if created or term.lemma is None:
+                    term.lemma = lemma
+                    term.save()
+                
                 PostingLists.objects.create(term=term, docdetail=doc_details)
-
-            for lemma in lemmatized_tokens:
-                if lemma not in stop_words:
-                    term_lemma, lemma_created = TermLemmas.objects.get_or_create(termlemma=lemma)
-                    PostingListLemmas.objects.create(termlemma=term_lemma, docdetail=doc_details)
-                    
 
 def articles(request):
     documents = Documents.objects.all()
@@ -391,7 +393,7 @@ def articles(request):
 
     return render(request, 'pages/articles.html', {'articles': context})
 
-def detailArticle(request, document_id):
+def detail_article(request, document_id):
     
     document = get_object_or_404(Documents, document_id=document_id)
     extracted_text = extract_text_from_pdf(document.document_path)
@@ -419,7 +421,6 @@ def generate_ontology(doc_ontology):
 
     classes = set()
     object_properties = set()
-    data_properties = set()
 
     for sent in clean_ents:
         prev_entity = None
@@ -440,6 +441,8 @@ def generate_ontology(doc_ontology):
                                 obj_prop = f"{ent.text}_in"
                             elif next_entity.label_ in ["NORP", "PERSON"]:
                                 obj_prop = f"{ent.text}_by"
+                            elif prev_entity.label_ == next_entity.label_:
+                                obj_prop = f"{ent.text}"                             
                             else:
                                 obj_prop = f"{ent.text}"
                         
@@ -507,22 +510,23 @@ def get_extra_information(answer):
 
             if predicate_name and object_name:
                 g.add((COFFEE[answer], URIRef(row['p']), URIRef(row['o'])))
-                text_response += f"{answer} {predicate_name} {object_name}. "
+                text_response += f"{answer.replace('_', ' ')} {predicate_name} {object_name}. "
             if predicate_name and subject_name:
                 g.add((URIRef(row['s']), URIRef(row['p']), COFFEE[answer]))
-                text_response += f"{subject_name} {predicate_name} {answer}. "
+                text_response += f"{subject_name} {predicate_name} {answer.replace('_', ' ')}. "
 
         rdf_output = g.serialize(format='turtle')
     else:
         rdf_output = None
     
     extra_info = {
-        'answer': answer.replace("_", " "),
+        'answer': answer,
         'text_response': text_response,
-        'rdf_output': rdf_output,
+        'rdf_output': rdf_output, 
     }
 
     return extra_info
+
 
 
 
@@ -556,44 +560,6 @@ def get_annotation(question,annotation):
         response = "Tidak ada jawaban"
 
     return response
-
-def get_answer_rdf(answer, key_noun):
-    print(f'INI KEY NOUN: {key_noun}')
-    COFFEE = Namespace("http://www.semanticweb.org/ariana/coffee#")
-    g = Graph()
-    g.bind("coffee", COFFEE)
-
-    query = f"""
-    PREFIX coffee: <http://www.semanticweb.org/ariana/coffee#>
-    SELECT ?p ?o ?s WHERE {{
-      {{ coffee:{answer} ?p coffee:{key_noun}.
-        FILTER (!CONTAINS(LCASE(STR(?p)), "type"))
-      }}
-      UNION
-      {{ coffee:{key_noun} ?p coffee:{answer}.
-        FILTER (!CONTAINS(LCASE(STR(?p)), "type"))
-      }}
-    }}
-    """
-    results = get_fuseki_data(query)
-
-    if results:
-        for row in results:
-            predicate = row.get('p')
-            object_ = row.get('o')
-            subject = row.get('s')
-
-            if predicate and object_:
-                g.add((COFFEE[answer], URIRef(predicate), URIRef(object_)))
-            if predicate and subject:
-                g.add((URIRef(subject), URIRef(predicate), COFFEE[answer]))
-
-        rdf_output = g.serialize(format='turtle')
-    else:
-        rdf_output = None
-
-    return rdf_output
-
 
 def get_instances(noun):
     onto_path.append(os.path.join(settings.BASE_DIR, 'kms_app/owl_file'))
@@ -639,6 +605,3 @@ def get_instances(noun):
         response += "No instances found."
 
     return response
-
-
-

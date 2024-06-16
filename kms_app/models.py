@@ -22,7 +22,7 @@ class Uploader(models.Model):
     username = models.CharField(max_length=150, unique=True)
     password = models.CharField(max_length=128, validators=[MinLengthValidator(8)])
 
-    def __str__(self):
+    def _str_(self):
         return self.username
 
 class Documents(models.Model):
@@ -30,12 +30,12 @@ class Documents(models.Model):
     document_name = models.CharField(max_length=255)  # Nama atau judul dokumen
     document_path = models.CharField(max_length=255)  # Isi dari dokumen tersebut
 
-    def __str__(self):
+    def _str_(self):
         return self.document_name
     
 class Terms(models.Model):
-    term_id = models.AutoField(primary_key=True)  # ID unik untuk setiap term
-    term = models.CharField(max_length=255,unique=True)  # Term atau kata kunci yang muncul dalam dokumen
+    term = models.CharField(max_length=255, unique=True, primary_key=True)  # Term atau kata kunci yang muncul dalam dokumen
+    lemma = models.CharField(max_length=255, blank=True)
 
     def __str__(self):
         return self.term
@@ -51,7 +51,7 @@ class DocDetails(models.Model):
     docdetail = models.CharField(max_length=255)  # Isi dari dokumen tersebut
     position = models.IntegerField()
 
-    def __str__(self):
+    def _str_(self):
         return self.docdetail
 
 class PostingLists(models.Model):
@@ -59,7 +59,7 @@ class PostingLists(models.Model):
     term = models.ForeignKey(Terms, on_delete=models.CASCADE,to_field='term', db_column='term')  # ID term yang merujuk ke Tabel Term
     docdetail = models.ForeignKey(DocDetails, on_delete=models.CASCADE)  # Frekuensi kemunculan term dalam dokumen tertentu
 
-    def __str__(self):
+    def _str_(self):
         return f"{self.term} - {self.docdetail}"
     
     class Meta:
@@ -72,32 +72,6 @@ class Refinements(models.Model):
     refinement_id = models.AutoField(primary_key=True)
     question = models.CharField(max_length=255)
     answer = models.CharField(max_length=255)
-
-class TermLemmas(models.Model):
-    termlemma_id = models.AutoField(primary_key=True)  # ID unik untuk setiap term
-    termlemma = models.CharField(max_length=255, unique=True)  # Term atau kata kunci yang muncul dalam dokumen
-
-    def __str__(self):
-        return self.termlemma
-
-    class Meta:
-        indexes = [
-            models.Index(fields=['termlemma']),  # Menambahkan indeks pada kolom termlemma
-        ]
-    
-class PostingListLemmas(models.Model):
-    postlistlemma_id = models.AutoField(primary_key=True)  # ID unik untuk setiap entri dalam posting list
-    termlemma = models.ForeignKey(TermLemmas, on_delete=models.CASCADE, to_field='termlemma', db_column='termlemma')  # ID term yang merujuk ke Tabel Term
-    docdetail = models.ForeignKey(DocDetails, on_delete=models.CASCADE)  # Frekuensi kemunculan term dalam dokumen tertentu
-
-    def __str__(self):
-        return f"{self.termlemma} - {self.docdetail}"
-    
-    class Meta:
-        indexes = [
-            models.Index(fields=['termlemma']),  # Menambahkan indeks pada kolom termlemma
-            models.Index(fields=['docdetail']),
-        ]
     
 # Model NER Default
 nlp_default = spacy.load("en_core_web_sm")
