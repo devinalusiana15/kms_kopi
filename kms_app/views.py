@@ -143,7 +143,7 @@ def find_answer_type(question):
           if 'definition' in question:
             return ['definition']
           else:
-            return ['PERCENT', 'PRODUCT', 'VARIETY', 'METHODS', 'BEVERAGE', 'QUANTITY']
+            return ['PERCENT', 'PRODUCT', 'VARIETY', 'METHODS', 'BEVERAGE', 'QUANTITY', 'LAW']
       elif 'how' in question:
           return ['direction']
     else:
@@ -154,7 +154,7 @@ def find_answer(answer_types, entities):
         'LOC': ['LOC','GPE', 'CONTINENT'],
         'PERSON': ['NORP', 'PERSON','NATIONALITY', 'JOB'],
         'DATE': ['DATE', 'TIME'],
-        'PRODUCT': ['PRODUCT', 'VARIETY', 'METHODS', 'BEVERAGE', 'QUANTITY', 'DISTANCE', 'TEMPERATURE'],
+        'PRODUCT': ['PRODUCT', 'VARIETY', 'METHODS', 'BEVERAGE', 'QUANTITY', 'DISTANCE', 'TEMPERATURE', 'LAW'],
     }
     for ent_text, ent_label in entities:
         for answer_type, labels in answer_types_mapping.items():
@@ -320,9 +320,9 @@ def home(request):
                 'related_articles': None,
                 'extra_info': None
             }
-        end_time = time.time() 
-        response_time = (end_time - start_time) * 1000
-        response_time = round(response_time, 1)
+        end_time = time.time()
+        response_time = end_time - start_time
+        response_time = round(response_time, 2)
         
         context['response_time'] = response_time
 
@@ -519,7 +519,7 @@ def get_extra_information(answer):
     extra_info = {
         'answer': answer.replace("_", " "),
         'text_response': text_response,
-        'rdf_output': rdf_output, 
+        'rdf_output': rdf_output,
     }
 
     return extra_info
